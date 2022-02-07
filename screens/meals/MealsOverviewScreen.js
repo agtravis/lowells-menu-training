@@ -1,6 +1,8 @@
 import React from 'react';
-import { FlatList, Text } from 'react-native';
+import { FlatList } from 'react-native';
 import { useSelector } from 'react-redux';
+
+import MealItem from '../../components/trainingApp/MealItem';
 
 const MealsOverviewScreen = (props) => {
   const meals = useSelector((state) => state.meals.meals);
@@ -9,7 +11,14 @@ const MealsOverviewScreen = (props) => {
     <FlatList
       data={meals}
       keyExtractor={(item) => item.id}
-      renderItem={(itemData) => <Text>{itemData.item.title}</Text>}
+      renderItem={(itemData) => (
+        <MealItem
+          image={itemData.item.imageUrl}
+          title={itemData.item.title}
+          onViewDetail={() => {}}
+          onDelete={() => console.log(itemData.item.id)}
+        />
+      )}
     />
   );
 };
