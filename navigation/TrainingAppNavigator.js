@@ -3,11 +3,13 @@ import { Platform } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 
 import MealsOverviewScreen from '../screens/meals/MealsOverviewScreen';
+import MealDetailScreen from '../screens/meals/MealDetailScreen';
 import Colors from '../constants/Colors';
 
 const MealsNavigator = createStackNavigator(
   {
     MealsOverview: MealsOverviewScreen,
+    MealDetail: MealDetailScreen,
   },
   {
     defaultNavigationOptions: {

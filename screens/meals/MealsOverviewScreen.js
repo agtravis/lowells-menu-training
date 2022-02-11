@@ -15,7 +15,12 @@ const MealsOverviewScreen = (props) => {
         <MealItem
           image={itemData.item.imageUrl}
           title={itemData.item.title}
-          onViewDetail={() => {}}
+          onViewDetail={() => {
+            props.navigation.navigate('MealDetail', {
+              mealId: itemData.item.id,
+              mealTitle: itemData.item.title,
+            });
+          }}
           onDelete={() => console.log(itemData.item.id)}
         />
       )}
