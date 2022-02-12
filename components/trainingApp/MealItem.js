@@ -81,6 +81,7 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   title: {
+    fontFamily: 'ubuntu-bold',
     fontSize: 18,
     marginVertical: 4,
   },

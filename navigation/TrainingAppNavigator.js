@@ -16,6 +16,12 @@ const MealsNavigator = createStackNavigator(
       headerStyle: {
         backgroundColor: Platform.OS === 'android' ? Colors.primary : '',
       },
+      headerTitleStyle: {
+        fontFamily: 'ubuntu-bold',
+      },
+      headerBackTitleStyle: {
+        fontFamily: 'ubuntu',
+      },
       headerTintColor: Platform.OS === 'android' ? 'white' : Colors.primary,
     },
   }

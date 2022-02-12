@@ -51,6 +51,7 @@ const styles = StyleSheet.create({
     height: 300,
   },
   description: {
+    fontFamily: 'ubuntu-light',
     fontSize: 14,
     textAlign: 'center',
     marginHorizontal: 20,
