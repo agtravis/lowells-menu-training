@@ -9,6 +9,8 @@ import {
 } from 'react-native';
 import { useSelector } from 'react-redux';
 
+import Colors from '../../constants/Colors';
+
 const MealDetailScreen = (props) => {
   const mealId = props.navigation.getParam('mealId');
 
@@ -17,9 +19,19 @@ const MealDetailScreen = (props) => {
   );
 
   return (
-    <View style={styles.container}>
-      <Text>{selectedMeal.title}</Text>
-    </View>
+    <ScrollView>
+      <Image style={styles.image} source={{ uri: selectedMeal.imageUrl }} />
+      <View style={styles.actions}>
+        <Button
+          title="Add to Favorites"
+          onPress={() => {
+            console.log('add to favorites');
+          }}
+          color={Colors.primary}
+        />
+      </View>
+      <Text style={styles.description}>{selectedMeal.description}</Text>
+    </ScrollView>
   );
 };
 
@@ -30,7 +42,19 @@ MealDetailScreen.navigationOptions = (navData) => {
 };
 
 const styles = StyleSheet.create({
-  container: {},
+  actions: {
+    marginVertical: 10,
+    alignItems: 'center',
+  },
+  image: {
+    width: '100%',
+    height: 300,
+  },
+  description: {
+    fontSize: 14,
+    textAlign: 'center',
+    marginHorizontal: 20,
+  },
 });
 
 export default MealDetailScreen;
