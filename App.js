@@ -5,10 +5,12 @@ import AppLoading from 'expo-app-loading';
 import * as Font from 'expo-font';
 
 import mealsReducer from './store/reducers/meals';
+import favoritesReducer from './store/reducers/favorites';
 import TrainingAppNavigator from './navigation/TrainingAppNavigator';
 
 const rootReducer = combineReducers({
   meals: mealsReducer,
+  favorites: favoritesReducer,
 });
 
 const fetchFonts = () => {
@@ -18,13 +20,6 @@ const fetchFonts = () => {
     'ubuntu-light': require('./assets/fonts/Ubuntu-Light.ttf'),
   });
 };
-
-// const fetchFonts = () => {
-//   return Font.loadAsync({
-//     'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),
-//     'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf'),
-//   });
-// };
 
 const store = createStore(rootReducer);
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -7,25 +7,36 @@ import {
   Image,
   Button,
 } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import Colors from '../../constants/Colors';
+import * as favoritesActions from '../../store/actions/favorites';
 
 const MealDetailScreen = (props) => {
   const mealId = props.navigation.getParam('mealId');
-
+  // const [isFavorite, setIsFavorite] = useState(false);
   const selectedMeal = useSelector((state) =>
     state.meals.meals.find((meal) => meal.id === mealId)
   );
+
+  const isFavorite = useSelector((state) => {
+    if (state.favorites.favorites.includes(selectedMeal)) {
+      return true;
+    } else {
+      return false;
+    }
+  });
+
+  const dispatch = useDispatch();
 
   return (
     <ScrollView>
       <Image style={styles.image} source={{ uri: selectedMeal.imageUrl }} />
       <View style={styles.actions}>
         <Button
-          title="Add to Favorites"
+          title={isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
           onPress={() => {
-            console.log('add to favorites');
+            dispatch(favoritesActions.addToFavorites(selectedMeal));
           }}
           color={Colors.primary}
         />
@@ -38,6 +49,7 @@ const MealDetailScreen = (props) => {
 MealDetailScreen.navigationOptions = (navData) => {
   return {
     headerTitle: navData.navigation.getParam('mealTitle'),
+    // add header button to add or remove from favorites
   };
 };
 
