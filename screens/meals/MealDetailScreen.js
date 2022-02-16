@@ -14,20 +14,18 @@ import * as favoritesActions from '../../store/actions/favorites';
 
 const MealDetailScreen = (props) => {
   const mealId = props.navigation.getParam('mealId');
-  // const [isFavorite, setIsFavorite] = useState(false);
   const selectedMeal = useSelector((state) =>
     state.meals.meals.find((meal) => meal.id === mealId)
   );
 
-  const isFavorite = useSelector((state) => {
-    if (state.favorites.favorites.includes(selectedMeal)) {
-      return true;
-    } else {
-      return false;
-    }
-  });
+  const favorites = useSelector((state) => state.favorites.favorites);
+
+  const isFavorite = favorites.includes(selectedMeal);
 
   const dispatch = useDispatch();
+
+  const toggleInFavorites = () =>
+    dispatch(favoritesActions.addToFavorites(selectedMeal));
 
   return (
     <ScrollView>
@@ -35,9 +33,7 @@ const MealDetailScreen = (props) => {
       <View style={styles.actions}>
         <Button
           title={isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
-          onPress={() => {
-            dispatch(favoritesActions.addToFavorites(selectedMeal));
-          }}
+          onPress={toggleInFavorites}
           color={Colors.primary}
         />
       </View>
