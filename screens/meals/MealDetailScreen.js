@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -8,9 +8,11 @@ import {
   Button,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
+import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 
 import Colors from '../../constants/Colors';
 import * as favoritesActions from '../../store/actions/favorites';
+import HeaderButton from '../../components/UI/HeaderButton';
 
 const MealDetailScreen = (props) => {
   const mealId = props.navigation.getParam('mealId');
@@ -24,8 +26,19 @@ const MealDetailScreen = (props) => {
 
   const dispatch = useDispatch();
 
-  const toggleInFavorites = () =>
+  const toggleInFavorites = useCallback(() => {
     dispatch(favoritesActions.addToFavorites(selectedMeal));
+  }, [dispatch, selectedMeal]);
+
+  useEffect(() => {
+    props.navigation.setParams({ isFavorite: isFavorite });
+  }, [isFavorite]);
+
+  useEffect(() => {
+    props.navigation.setParams({
+      toggleFav: toggleInFavorites,
+    });
+  }, [toggleInFavorites]);
 
   return (
     <ScrollView>
@@ -45,7 +58,19 @@ const MealDetailScreen = (props) => {
 MealDetailScreen.navigationOptions = (navData) => {
   return {
     headerTitle: navData.navigation.getParam('mealTitle'),
-    // add header button to add or remove from favorites
+    headerRight: () => {
+      const isFavorite = navData.navigation.getParam('isFavorite');
+      const toggleFn = navData.navigation.getParam('toggleFav');
+      return (
+        <HeaderButtons HeaderButtonComponent={HeaderButton}>
+          <Item
+            title="isFavorite"
+            iconName={isFavorite ? 'star' : 'star-outline'}
+            onPress={toggleFn}
+          />
+        </HeaderButtons>
+      );
+    },
   };
 };
 
