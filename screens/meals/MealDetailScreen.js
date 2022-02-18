@@ -26,7 +26,7 @@ const MealDetailScreen = (props) => {
 
   const dispatch = useDispatch();
 
-  const toggleInFavorites = useCallback(() => {
+  const toggleInFavoritesHandler = useCallback(() => {
     dispatch(favoritesActions.addToFavorites(selectedMeal));
   }, [dispatch, selectedMeal]);
 
@@ -36,9 +36,9 @@ const MealDetailScreen = (props) => {
 
   useEffect(() => {
     props.navigation.setParams({
-      toggleFav: toggleInFavorites,
+      toggleFav: toggleInFavoritesHandler,
     });
-  }, [toggleInFavorites]);
+  }, [toggleInFavoritesHandler]);
 
   return (
     <ScrollView>
@@ -46,7 +46,7 @@ const MealDetailScreen = (props) => {
       <View style={styles.actions}>
         <Button
           title={isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
-          onPress={toggleInFavorites}
+          onPress={toggleInFavoritesHandler}
           color={Colors.primary}
         />
       </View>

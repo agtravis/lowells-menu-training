@@ -1,8 +1,10 @@
 import React from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, Platform } from 'react-native';
 import { useSelector } from 'react-redux';
+import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 
 import MealItem from '../../components/trainingApp/MealItem';
+import HeaderButton from '../../components/UI/HeaderButton';
 
 const MealsOverviewScreen = (props) => {
   const meals = useSelector((state) => state.meals.meals);
@@ -28,8 +30,21 @@ const MealsOverviewScreen = (props) => {
   );
 };
 
-MealsOverviewScreen.navigationOptions = {
-  headerTitle: 'All Meals',
+MealsOverviewScreen.navigationOptions = (navData) => {
+  return {
+    headerTitle: 'All Meals',
+    headerLeft: () => (
+      <HeaderButtons HeaderButtonComponent={HeaderButton}>
+        <Item
+          title="Menu"
+          iconName={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'}
+          onPress={() => {
+            navData.navigation.toggleDrawer();
+          }}
+        />
+      </HeaderButtons>
+    ),
+  };
 };
 
 export default MealsOverviewScreen;
