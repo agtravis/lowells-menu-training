@@ -8,6 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 import MealsOverviewScreen from '../screens/meals/MealsOverviewScreen';
 import FavoriteMealsScreen from '../screens/meals/FavoriteMealsScreen';
 import MealDetailScreen from '../screens/meals/MealDetailScreen';
+import AdminMealsScreen from '../screens/user/AdminMealsScreen';
 import Colors from '../constants/Colors';
 
 const defaultNavOptions = {
@@ -57,10 +58,29 @@ const FavoritesNavigator = createStackNavigator(
   }
 );
 
+const AdminNavigator = createStackNavigator(
+  {
+    AdminMeals: AdminMealsScreen,
+  },
+  {
+    navigationOptions: {
+      drawerIcon: (drawerConfig) => (
+        <Ionicons
+          name={Platform.OS === 'android' ? 'md-create' : 'ios-create'}
+          size={23}
+          color={drawerConfig.tintColor}
+        />
+      ),
+    },
+    defaultNavigationOptions: defaultNavOptions,
+  }
+);
+
 const TrainingAppNavigator = createDrawerNavigator(
   {
     Meals: MealsNavigator,
     Favorites: FavoritesNavigator,
+    Admin: AdminNavigator,
   },
   {
     contentOptions: {
