@@ -1,13 +1,22 @@
 import React from 'react';
-import { FlatList, Platform } from 'react-native';
+import { FlatList, Platform, Button } from 'react-native';
 import { useSelector } from 'react-redux';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 
 import HeaderButton from '../../components/UI/HeaderButton';
 import MealItem from '../../components/trainingApp/MealItem';
+import Colors from '../../constants/Colors';
 
 const AdminMealsScreen = (props) => {
   const meals = useSelector((state) => state.meals.meals);
+
+  const selectItemHandler = () => {
+    console.log('edit screen');
+  };
+
+  const deleteItemHandler = () => {
+    console.log('delete item');
+  };
 
   return (
     <FlatList
@@ -17,9 +26,25 @@ const AdminMealsScreen = (props) => {
         <MealItem
           image={itemData.item.imageUrl}
           title={itemData.item.title}
-          onViewDetail={() => {}}
-          onAddToCart={() => {}}
-        />
+          onSelect={() => {
+            selectItemHandler();
+          }}
+        >
+          <Button
+            title="Edit Details"
+            onPress={() => {
+              selectItemHandler();
+            }}
+            color={Colors.primary}
+          />
+          <Button
+            title="Delete"
+            onPress={() => {
+              deleteItemHandler();
+            }}
+            color={Colors.primary}
+          />
+        </MealItem>
       )}
     />
   );

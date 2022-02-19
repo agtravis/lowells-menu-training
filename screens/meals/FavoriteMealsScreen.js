@@ -1,13 +1,26 @@
 import React from 'react';
-import { FlatList } from 'react-native';
-import { useSelector } from 'react-redux';
+import { FlatList, Button } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 
 import MealItem from '../../components/trainingApp/MealItem';
 import HeaderButton from '../../components/UI/HeaderButton';
+import * as favoritesActions from '../../store/actions/favorites';
+import Colors from '../../constants/Colors';
 
 const FavoriteMealsScreen = (props) => {
   const meals = useSelector((state) => state.favorites.favorites);
+
+  const selectItemHandler = (id, title) => {
+    props.navigation.navigate('MealDetail', {
+      mealId: id,
+      mealTitle: title,
+    });
+  };
+
+  const dispatch = useDispatch();
+
+  const favorites = useSelector((state) => state.favorites.favorites);
 
   return (
     <FlatList
@@ -17,14 +30,29 @@ const FavoriteMealsScreen = (props) => {
         <MealItem
           image={itemData.item.imageUrl}
           title={itemData.item.title}
-          onViewDetail={() => {
-            props.navigation.navigate('MealDetail', {
-              mealId: itemData.item.id,
-              mealTitle: itemData.item.title,
-            });
+          onSelect={() => {
+            selectItemHandler(itemData.item.id, itemData.item.title);
           }}
-          onDelete={() => console.log(itemData.item.id)}
-        />
+        >
+          <Button
+            title="View Details"
+            onPress={() => {
+              selectItemHandler(itemData.item.id, itemData.item.title);
+            }}
+            color={Colors.primary}
+          />
+          <Button
+            title={
+              favorites.includes(itemData.item)
+                ? 'Remove from Favorites'
+                : 'Add to Favorites'
+            }
+            onPress={() => {
+              dispatch(favoritesActions.addToFavorites(itemData.item));
+            }}
+            color={Colors.primary}
+          />
+        </MealItem>
       )}
     />
   );

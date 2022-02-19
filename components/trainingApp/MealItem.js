@@ -4,13 +4,10 @@ import {
   View,
   Text,
   Image,
-  Button,
   TouchableOpacity,
   TouchableNativeFeedback,
   Platform,
 } from 'react-native';
-
-import Colors from '../../constants/Colors';
 
 const MealItem = (props) => {
   let TouchableCmp = TouchableOpacity;
@@ -21,7 +18,7 @@ const MealItem = (props) => {
   return (
     <View style={styles.meal}>
       <View style={styles.touchable}>
-        <TouchableCmp onPress={props.onViewDetail} useForeground>
+        <TouchableCmp onPress={props.onSelect} useForeground>
           <View>
             <View style={styles.imageContainer}>
               <Image style={styles.image} source={{ uri: props.image }} />
@@ -29,18 +26,7 @@ const MealItem = (props) => {
             <View style={styles.details}>
               <Text style={styles.title}>{props.title}</Text>
             </View>
-            <View style={styles.actions}>
-              <Button
-                title="View Details"
-                onPress={props.onViewDetail}
-                color={Colors.primary}
-              />
-              <Button
-                title="Delete"
-                onPress={props.onDelete}
-                color={Colors.primary}
-              />
-            </View>
+            <View style={styles.actions}>{props.children}</View>
           </View>
         </TouchableCmp>
       </View>
