@@ -1,0 +1,15 @@
+const allergens = [
+  'Beef',
+  'Chicken',
+  'Crab',
+  'Dairy',
+  'Egg',
+  'Fish',
+  'Garlic',
+  'Gluten',
+  'Onion',
+  'Pork',
+  'Sesame',
+  'Shrimp/prawns',
+  'Soy',
+];
