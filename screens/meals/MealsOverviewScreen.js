@@ -35,7 +35,22 @@ const MealsOverviewScreen = (props) => {
     'Shrimp/prawns': true,
     Soy: true,
   });
-  const meals = useSelector((state) => state.meals.meals);
+
+  const allMeals = useSelector((state) => state.meals.meals);
+
+  const meals = [];
+
+  for (const meal of allMeals) {
+    let includeMeal = true;
+    for (const allergen of meal.allergens) {
+      if (filters[allergen] === false) {
+        includeMeal = false;
+      }
+    }
+    if (includeMeal === true) {
+      meals.push(meal);
+    }
+  }
 
   const selectItemHandler = (id, title) => {
     props.navigation.navigate('MealDetail', {
@@ -71,13 +86,6 @@ const MealsOverviewScreen = (props) => {
 
   return (
     <View>
-      {/*<View style={styles.filterButtonContainer}>
-        <Button
-          title="View Filters"
-          onPress={toggleModalHandler}
-          color={modalVisible ? Colors.accent : Colors.primary}
-        />
-      </View>*/}
       <Modal
         toggleModal={toggleModalHandler}
         modalVisible={modalVisible}
@@ -106,28 +114,6 @@ const MealsOverviewScreen = (props) => {
             />
           ))}
         </View>
-        {/*<FlatList
-          contentContainerStyle={{
-            // justifyContent: 'center',
-            alignItems: 'center',
-          }}
-          numColumns={2}
-          data={Allergens}
-          keyExtractor={(item) => item}
-          renderItem={(itemData) => (
-            <CheckBox
-              containerStyle={{
-                width: '40%',
-              }}
-              center
-              size={10}
-              textStyle={{ fontSize: 8 }}
-              title={itemData.item}
-              checked={filters[itemData.item]}
-              onPress={() => filterChangeHandler(itemData.item)}
-            />
-          )}
-            />*/}
       </Modal>
       <FlatList
         data={meals}
