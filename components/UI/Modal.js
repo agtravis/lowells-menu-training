@@ -52,8 +52,6 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   modalContentContainer: {
-    borderColor: 'black',
-    borderWidth: 1,
     padding: 5,
     marginBottom: 15,
     width: 250,

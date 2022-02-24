@@ -83,26 +83,51 @@ const MealsOverviewScreen = (props) => {
         modalVisible={modalVisible}
         title="Show items containing:"
       >
-        <View style={{}}>
-          <FlatList
-            data={Allergens}
-            keyExtractor={(item) => item}
-            renderItem={(itemData) => (
-              <CheckBox
-                containerStyle={{
-                  borderColor: 'red',
-                  width: '45%',
-                }}
-                center
-                size={10}
-                textStyle={{ fontSize: 8 }}
-                title={itemData.item}
-                checked={filters[itemData.item]}
-                onPress={() => filterChangeHandler(itemData.item)}
-              />
-            )}
-          />
+        <View
+          style={{
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          {Allergens.map((allergen, index) => (
+            <CheckBox
+              containerStyle={{
+                width: '40%',
+              }}
+              key={index}
+              center
+              size={10}
+              textStyle={{ fontSize: 8 }}
+              title={allergen}
+              checked={filters[allergen]}
+              onPress={() => filterChangeHandler(allergen)}
+            />
+          ))}
         </View>
+        {/*<FlatList
+          contentContainerStyle={{
+            // justifyContent: 'center',
+            alignItems: 'center',
+          }}
+          numColumns={2}
+          data={Allergens}
+          keyExtractor={(item) => item}
+          renderItem={(itemData) => (
+            <CheckBox
+              containerStyle={{
+                width: '40%',
+              }}
+              center
+              size={10}
+              textStyle={{ fontSize: 8 }}
+              title={itemData.item}
+              checked={filters[itemData.item]}
+              onPress={() => filterChangeHandler(itemData.item)}
+            />
+          )}
+            />*/}
       </Modal>
       <FlatList
         data={meals}
