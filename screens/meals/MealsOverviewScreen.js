@@ -1,5 +1,13 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { FlatList, Platform, Button, StyleSheet, View } from 'react-native';
+import {
+  FlatList,
+  Platform,
+  Button,
+  StyleSheet,
+  View,
+  Text,
+} from 'react-native';
+import { CheckBox, Icon } from 'react-native-elements';
 import { useDispatch, useSelector } from 'react-redux';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 
@@ -8,10 +16,25 @@ import HeaderButton from '../../components/UI/HeaderButton';
 import Modal from '../../components/UI/Modal';
 import * as favoritesActions from '../../store/actions/favorites';
 import Colors from '../../constants/Colors';
+import Allergens from '../../constants/Allergens';
 
 const MealsOverviewScreen = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
-
+  const [filters, setFilters] = useState({
+    Beef: true,
+    Chicken: true,
+    Crab: true,
+    Dairy: true,
+    Egg: true,
+    Fish: true,
+    Garlic: true,
+    Gluten: true,
+    Onion: true,
+    Pork: true,
+    Sesame: true,
+    'Shrimp/prawns': true,
+    Soy: true,
+  });
   const meals = useSelector((state) => state.meals.meals);
 
   const selectItemHandler = (id, title) => {
@@ -26,7 +49,6 @@ const MealsOverviewScreen = (props) => {
   };
 
   const headerButtonRightFn = useCallback(() => {
-    console.log('insert filter logic');
     toggleModalHandler();
   }, []);
 
@@ -40,16 +62,48 @@ const MealsOverviewScreen = (props) => {
 
   const dispatch = useDispatch();
 
+  const filterChangeHandler = (name) => {
+    setFilters((prevState) => ({
+      ...prevState,
+      [name]: !filters[name],
+    }));
+  };
+
   return (
     <View>
-      <View style={styles.filterButtonContainer}>
+      {/*<View style={styles.filterButtonContainer}>
         <Button
           title="View Filters"
           onPress={toggleModalHandler}
           color={modalVisible ? Colors.accent : Colors.primary}
         />
-      </View>
-      <Modal toggleModal={toggleModalHandler} modalVisible={modalVisible} />
+      </View>*/}
+      <Modal
+        toggleModal={toggleModalHandler}
+        modalVisible={modalVisible}
+        title="Show items containing:"
+      >
+        <View style={{}}>
+          <FlatList
+            data={Allergens}
+            keyExtractor={(item) => item}
+            renderItem={(itemData) => (
+              <CheckBox
+                containerStyle={{
+                  borderColor: 'red',
+                  width: '45%',
+                }}
+                center
+                size={10}
+                textStyle={{ fontSize: 8 }}
+                title={itemData.item}
+                checked={filters[itemData.item]}
+                onPress={() => filterChangeHandler(itemData.item)}
+              />
+            )}
+          />
+        </View>
+      </Modal>
       <FlatList
         data={meals}
         keyExtractor={(item) => item.id}

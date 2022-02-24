@@ -1,4 +1,4 @@
-const allergens = [
+export default [
   'Beef',
   'Chicken',
   'Crab',

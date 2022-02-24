@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Alert, Modal, StyleSheet, Text, View, Button } from 'react-native';
 
 import Colors from '../../constants/Colors';
 
 const CustomModal = (props) => {
-  //   const [modalVisible, setModalVisible] = useState(false);
   return (
     <Modal
       animationType="slide"
@@ -17,7 +16,8 @@ const CustomModal = (props) => {
     >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          <Text style={styles.modalTextHeader}>Choose filters:</Text>
+          <Text style={styles.modalTextHeader}>{props.title}</Text>
+          <View style={styles.modalContentContainer}>{props.children}</View>
           <Button
             title="Close"
             color={Colors.primary}
@@ -50,6 +50,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+  },
+  modalContentContainer: {
+    borderColor: 'black',
+    borderWidth: 1,
+    padding: 5,
+    marginBottom: 15,
+    width: 250,
   },
   modalTextHeader: {
     marginBottom: 15,
