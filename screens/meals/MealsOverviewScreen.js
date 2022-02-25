@@ -20,6 +20,7 @@ import Allergens from '../../constants/Allergens';
 
 const MealsOverviewScreen = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [menu, setMenu] = useState('breakfast');
   const [filters, setFilters] = useState({
     Beef: true,
     Chicken: true,
@@ -32,7 +33,7 @@ const MealsOverviewScreen = (props) => {
     Onion: true,
     Pork: true,
     Sesame: true,
-    'Shrimp/prawns': true,
+    Shrimp: true,
     Soy: true,
   });
 
@@ -47,7 +48,7 @@ const MealsOverviewScreen = (props) => {
         includeMeal = false;
       }
     }
-    if (includeMeal === true) {
+    if (includeMeal === true && meal.menu === menu) {
       meals.push(meal);
     }
   }
@@ -73,6 +74,10 @@ const MealsOverviewScreen = (props) => {
     });
   }, [headerButtonRightFn]);
 
+  const toggleMenuHandler = () => {
+    setMenu((prevState) => (prevState === 'breakfast' ? 'lunch' : 'breakfast'));
+  };
+
   const favorites = useSelector((state) => state.favorites.favorites);
 
   const dispatch = useDispatch();
@@ -86,6 +91,18 @@ const MealsOverviewScreen = (props) => {
 
   return (
     <View>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>
+          {menu === 'breakfast' ? 'BREAKFAST' : 'LUNCH'}
+        </Text>
+      </View>
+      <View style={styles.toggleMenuButton}>
+        <Button
+          title={menu === 'breakfast' ? 'Show Lunch' : 'Show Breakfast'}
+          onPress={toggleMenuHandler}
+          color={Colors.primary}
+        />
+      </View>
       <Modal
         toggleModal={toggleModalHandler}
         modalVisible={modalVisible}
@@ -107,7 +124,7 @@ const MealsOverviewScreen = (props) => {
               key={index}
               center
               size={10}
-              textStyle={{ fontSize: 8 }}
+              textStyle={{ fontSize: 16 }}
               title={allergen}
               checked={filters[allergen]}
               onPress={() => filterChangeHandler(allergen)}
@@ -152,16 +169,25 @@ const MealsOverviewScreen = (props) => {
 };
 
 const styles = StyleSheet.create({
-  filterButtonContainer: {
-    justifyContent: 'center',
-    marginTop: 20,
+  toggleMenuButton: {
+    marginTop: 10,
     alignItems: 'center',
+  },
+  title: {
+    color: Colors.primary,
+    fontFamily: 'ubuntu-bold',
+    fontSize: 30,
+    marginVertical: 4,
+  },
+  titleContainer: {
+    alignItems: 'center',
+    marginTop: 20,
   },
 });
 
 MealsOverviewScreen.navigationOptions = (navData) => {
   return {
-    headerTitle: 'All Meals',
+    headerTitle: "Lowell's Menus",
     headerLeft: () => (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item

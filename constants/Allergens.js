@@ -10,6 +10,6 @@ export default [
   'Onion',
   'Pork',
   'Sesame',
-  'Shrimp/prawns',
+  'Shrimp',
   'Soy',
 ];

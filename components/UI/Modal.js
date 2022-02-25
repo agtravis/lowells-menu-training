@@ -6,7 +6,7 @@ import Colors from '../../constants/Colors';
 const CustomModal = (props) => {
   return (
     <Modal
-      animationType="slide"
+      animationType="fade"
       transparent={true}
       visible={props.modalVisible}
       onRequestClose={() => {
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     margin: 20,
     backgroundColor: Colors.accent,
     borderRadius: 5,
-    padding: 35,
+    padding: 15,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
   modalContentContainer: {
     padding: 5,
     marginBottom: 15,
-    width: 250,
+    width: '95%',
   },
   modalTextHeader: {
     marginBottom: 15,
