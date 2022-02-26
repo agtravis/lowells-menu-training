@@ -12,8 +12,8 @@ const AdminMealsScreen = (props) => {
   const meals = useSelector((state) => state.meals.meals);
   const dispatch = useDispatch();
 
-  const selectItemHandler = () => {
-    console.log('edit screen');
+  const editMealHandler = (id) => {
+    props.navigation.navigate('EditMeal', { mealId: id });
   };
 
   const deleteItemHandler = (id) => {
@@ -29,13 +29,13 @@ const AdminMealsScreen = (props) => {
           image={itemData.item.imageUrl}
           title={itemData.item.title}
           onSelect={() => {
-            selectItemHandler();
+            editMealHandler(itemData.item.id);
           }}
         >
           <Button
             title="Edit Details"
             onPress={() => {
-              selectItemHandler(itemData.item.id);
+              editMealHandler(itemData.item.id);
             }}
             color={Colors.primary}
           />
@@ -62,6 +62,17 @@ AdminMealsScreen.navigationOptions = (navData) => {
           iconName={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'}
           onPress={() => {
             navData.navigation.toggleDrawer();
+          }}
+        />
+      </HeaderButtons>
+    ),
+    headerRight: () => (
+      <HeaderButtons HeaderButtonComponent={HeaderButton}>
+        <Item
+          title="Menu"
+          iconName={Platform.OS === 'android' ? 'md-create' : 'ios-create'}
+          onPress={() => {
+            navData.navigation.navigate('EditMeal');
           }}
         />
       </HeaderButtons>

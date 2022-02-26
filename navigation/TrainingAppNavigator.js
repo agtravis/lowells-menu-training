@@ -9,6 +9,7 @@ import MealsOverviewScreen from '../screens/meals/MealsOverviewScreen';
 import FavoriteMealsScreen from '../screens/meals/FavoriteMealsScreen';
 import MealDetailScreen from '../screens/meals/MealDetailScreen';
 import AdminMealsScreen from '../screens/user/AdminMealsScreen';
+import EditMealScreen from '../screens/user/EditMealScreen';
 import Colors from '../constants/Colors';
 
 const defaultNavOptions = {
@@ -61,6 +62,7 @@ const FavoritesNavigator = createStackNavigator(
 const AdminNavigator = createStackNavigator(
   {
     AdminMeals: AdminMealsScreen,
+    EditMeal: EditMealScreen,
   },
   {
     navigationOptions: {
