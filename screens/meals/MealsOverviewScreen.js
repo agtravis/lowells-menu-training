@@ -74,8 +74,8 @@ const MealsOverviewScreen = (props) => {
     });
   }, [headerButtonRightFn]);
 
-  const toggleMenuHandler = () => {
-    setMenu((prevState) => (prevState === 'breakfast' ? 'lunch' : 'breakfast'));
+  const toggleMenuHandler = (menuChoice) => {
+    setMenu(menuChoice);
   };
 
   const favorites = useSelector((state) => state.favorites.favorites);
@@ -91,24 +91,42 @@ const MealsOverviewScreen = (props) => {
 
   return (
     <View>
-      <View style={styles.titleContainer}>
-        <Text style={styles.title}>
-          {menu === 'breakfast' ? 'BREAKFAST' : 'LUNCH'}
-        </Text>
-      </View>
-      <View style={styles.toggleMenuButton}>
-        <Button
-          title={menu === 'breakfast' ? 'Show Lunch' : 'Show Breakfast'}
-          onPress={toggleMenuHandler}
-          color={Colors.primary}
-        />
+      <View style={styles.toggleContainer}>
+        <View style={styles.checkBoxContainer}>
+          <CheckBox
+            containerStyle={{
+              width: '40%',
+            }}
+            checkedIcon="dot-circle-o"
+            uncheckedIcon="circle-o"
+            center
+            size={14}
+            textStyle={{ fontSize: 16 }}
+            title={'Breakfast'}
+            checked={menu === 'breakfast'}
+            onPress={() => toggleMenuHandler('breakfast')}
+          />
+          <CheckBox
+            containerStyle={{
+              width: '40%',
+            }}
+            checkedIcon="dot-circle-o"
+            uncheckedIcon="circle-o"
+            center
+            size={14}
+            textStyle={{ fontSize: 16 }}
+            title={'Lunch'}
+            checked={menu === 'lunch'}
+            onPress={() => toggleMenuHandler('lunch')}
+          />
+        </View>
       </View>
       <Modal
         toggleModal={toggleModalHandler}
         modalVisible={modalVisible}
         title="Show items containing:"
       >
-        <View style={styles.allergensContainer}>
+        <View style={styles.checkBoxContainer}>
           {Allergens.map((allergen, index) => (
             <CheckBox
               containerStyle={{
@@ -162,23 +180,13 @@ const MealsOverviewScreen = (props) => {
 };
 
 const styles = StyleSheet.create({
-  allergensContainer: {
+  checkBoxContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  toggleMenuButton: {
-    marginTop: 10,
-    alignItems: 'center',
-  },
-  title: {
-    color: Colors.primary,
-    fontFamily: 'ubuntu-bold',
-    fontSize: 30,
-    marginVertical: 4,
-  },
-  titleContainer: {
+  toggleContainer: {
     alignItems: 'center',
     marginTop: 20,
   },

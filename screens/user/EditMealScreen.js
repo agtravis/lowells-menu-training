@@ -66,13 +66,15 @@ const EditMealScreen = (props) => {
       <View style={styles.form}>
         <View style={styles.formControl}>
           <Text style={styles.label}>Menu (select one)</Text>
-          <View style={styles.allergensContainer}>
+          <View style={styles.checkBoxContainer}>
             <CheckBox
               containerStyle={{
                 width: '40%',
               }}
+              checkedIcon="dot-circle-o"
+              uncheckedIcon="circle-o"
               center
-              size={10}
+              size={14}
               textStyle={{ fontSize: 16 }}
               title={'Breakfast'}
               checked={menu === 'breakfast'}
@@ -82,8 +84,10 @@ const EditMealScreen = (props) => {
               containerStyle={{
                 width: '40%',
               }}
+              checkedIcon="dot-circle-o"
+              uncheckedIcon="circle-o"
               center
-              size={10}
+              size={14}
               textStyle={{ fontSize: 16 }}
               title={'Lunch'}
               checked={menu === 'lunch'}
@@ -117,7 +121,7 @@ const EditMealScreen = (props) => {
         </View>
         <View style={styles.formControl}>
           <Text style={styles.label}>Allergens (select all that apply)</Text>
-          <View style={styles.allergensContainer}>
+          <View style={styles.checkBoxContainer}>
             {Allergens.map((allergen, index) => (
               <CheckBox
                 containerStyle={{
@@ -161,7 +165,7 @@ EditMealScreen.navigationOptions = (navData) => {
 };
 
 const styles = StyleSheet.create({
-  allergensContainer: {
+  checkBoxContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
