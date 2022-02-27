@@ -10,8 +10,10 @@ import {
 } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useSelector } from 'react-redux';
+import { CheckBox } from 'react-native-elements';
 
 import HeaderButton from '../../components/UI/HeaderButton';
+import Allergens from '../../constants/Allergens';
 
 const EditMealScreen = (props) => {
   const mealId = props.navigation.getParam('mealId');
@@ -19,7 +21,7 @@ const EditMealScreen = (props) => {
     state.meals.meals.find((meal) => meal.id === mealId)
   );
 
-  const [menu, setMenu] = useState(editedMeal ? editedMeal.menu : '');
+  const [menu, setMenu] = useState(editedMeal ? editedMeal.menu : null);
   const [title, setTitle] = useState(editedMeal ? editedMeal.title : '');
   const [imageUrl, setImageUrl] = useState(
     editedMeal ? editedMeal.imageUrl : ''
@@ -27,9 +29,26 @@ const EditMealScreen = (props) => {
   const [description, setDescription] = useState(
     editedMeal ? editedMeal.description : ''
   );
-  const [allergens, setAllergens] = useState(
-    editedMeal ? editedMeal.allergens.join() : ''
+  const [allergensArr, setAllergensArr] = useState(
+    editedMeal ? editedMeal.allergens : []
   );
+
+  const toggleMenuHandler = (menuChoice) => {
+    setMenu(menuChoice);
+  };
+
+  const pushToAllergensHandler = (newAllergen) => {
+    if (allergensArr.includes(newAllergen)) {
+      const filteredAllergens = allergensArr.filter(
+        (allergen) => allergen !== newAllergen
+      );
+      setAllergensArr(filteredAllergens);
+    } else {
+      const newAllergens = [...allergensArr, newAllergen];
+      const sortedAllergens = newAllergens.sort((a, b) => (a > b ? 1 : -1));
+      setAllergensArr(sortedAllergens);
+    }
+  };
 
   const compileMeal = () => {
     const newMeal = {
@@ -37,7 +56,7 @@ const EditMealScreen = (props) => {
       title: title,
       imageUrl: imageUrl,
       description: description,
-      allergens: allergens.split(','),
+      allergensArr: allergensArr,
     };
     console.log(newMeal);
   };
@@ -46,12 +65,31 @@ const EditMealScreen = (props) => {
     <ScrollView>
       <View style={styles.form}>
         <View style={styles.formControl}>
-          <Text style={styles.label}>Menu</Text>
-          <TextInput
-            style={styles.input}
-            value={menu}
-            onChangeText={(text) => setMenu(text)}
-          />
+          <Text style={styles.label}>Menu (select one)</Text>
+          <View style={styles.allergensContainer}>
+            <CheckBox
+              containerStyle={{
+                width: '40%',
+              }}
+              center
+              size={10}
+              textStyle={{ fontSize: 16 }}
+              title={'Breakfast'}
+              checked={menu === 'breakfast'}
+              onPress={() => toggleMenuHandler('breakfast')}
+            />
+            <CheckBox
+              containerStyle={{
+                width: '40%',
+              }}
+              center
+              size={10}
+              textStyle={{ fontSize: 16 }}
+              title={'Lunch'}
+              checked={menu === 'lunch'}
+              onPress={() => toggleMenuHandler('lunch')}
+            />
+          </View>
         </View>
         <View style={styles.formControl}>
           <Text style={styles.label}>Title</Text>
@@ -62,7 +100,7 @@ const EditMealScreen = (props) => {
           />
         </View>
         <View style={styles.formControl}>
-          <Text style={styles.label}>ImageURL</Text>
+          <Text style={styles.label}>Image URL</Text>
           <TextInput
             style={styles.input}
             value={imageUrl}
@@ -78,14 +116,26 @@ const EditMealScreen = (props) => {
           />
         </View>
         <View style={styles.formControl}>
-          <Text style={styles.label}>Allergens</Text>
-          <TextInput
-            style={styles.input}
-            value={allergens}
-            onChangeText={(text) => setAllergens(text)}
-          />
+          <Text style={styles.label}>Allergens (select all that apply)</Text>
+          <View style={styles.allergensContainer}>
+            {Allergens.map((allergen, index) => (
+              <CheckBox
+                containerStyle={{
+                  width: '40%',
+                }}
+                key={index}
+                center
+                size={10}
+                textStyle={{ fontSize: 16 }}
+                title={allergen}
+                checked={allergensArr.includes(allergen)}
+                onPress={() => pushToAllergensHandler(allergen)}
+              />
+            ))}
+          </View>
+
+          <Button title="push" onPress={compileMeal} />
         </View>
-        <Button title="push" onPress={compileMeal} />
       </View>
     </ScrollView>
   );
@@ -111,6 +161,12 @@ EditMealScreen.navigationOptions = (navData) => {
 };
 
 const styles = StyleSheet.create({
+  allergensContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   form: {
     margin: 20,
   },

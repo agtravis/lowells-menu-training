@@ -7,7 +7,7 @@ import {
   View,
   Text,
 } from 'react-native';
-import { CheckBox, Icon } from 'react-native-elements';
+import { CheckBox } from 'react-native-elements';
 import { useDispatch, useSelector } from 'react-redux';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 
@@ -108,14 +108,7 @@ const MealsOverviewScreen = (props) => {
         modalVisible={modalVisible}
         title="Show items containing:"
       >
-        <View
-          style={{
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
+        <View style={styles.allergensContainer}>
           {Allergens.map((allergen, index) => (
             <CheckBox
               containerStyle={{
@@ -169,6 +162,12 @@ const MealsOverviewScreen = (props) => {
 };
 
 const styles = StyleSheet.create({
+  allergensContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   toggleMenuButton: {
     marginTop: 10,
     alignItems: 'center',
