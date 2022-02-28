@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   StyleSheet,
   View,
@@ -49,6 +49,14 @@ const EditMealScreen = (props) => {
       setAllergensArr(sortedAllergens);
     }
   };
+
+  const submitHandler = useCallback(() => {
+    console.log('submitting');
+  }, []);
+
+  useEffect(() => {
+    props.navigation.setParams({ submit: submitHandler });
+  }, [submitHandler]);
 
   const compileMeal = () => {
     const newMeal = {
@@ -146,6 +154,7 @@ const EditMealScreen = (props) => {
 };
 
 EditMealScreen.navigationOptions = (navData) => {
+  const submitFn = navData.navigation.getParam('submit');
   return {
     headerTitle: navData.navigation.getParam('mealId')
       ? 'Edit Meal'
@@ -155,9 +164,7 @@ EditMealScreen.navigationOptions = (navData) => {
         <Item
           title="Save"
           iconName={Platform.OS === 'android' ? 'md-save' : 'ios-save'}
-          onPress={() => {
-            console.log('plop');
-          }}
+          onPress={submitFn}
         />
       </HeaderButtons>
     ),
