@@ -144,6 +144,7 @@ const MealsOverviewScreen = (props) => {
         </View>
       </Modal>
       <FlatList
+        contentContainerStyle={styles.flatList}
         data={meals}
         keyExtractor={(item) => item.id}
         renderItem={(itemData) => (
@@ -180,6 +181,7 @@ const MealsOverviewScreen = (props) => {
 };
 
 const styles = StyleSheet.create({
+  flatList: { paddingBottom: 75 },
   checkBoxContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',

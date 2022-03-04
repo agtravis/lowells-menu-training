@@ -9,10 +9,11 @@ import {
   Button,
 } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { CheckBox } from 'react-native-elements';
 
 import HeaderButton from '../../components/UI/HeaderButton';
+import * as mealsActions from '../../store/actions/meals';
 import Allergens from '../../constants/Allergens';
 
 const EditMealScreen = (props) => {
@@ -33,6 +34,8 @@ const EditMealScreen = (props) => {
     editedMeal ? editedMeal.allergens : []
   );
 
+  const dispatch = useDispatch();
+
   const toggleMenuHandler = (menuChoice) => {
     setMenu(menuChoice);
   };
@@ -51,8 +54,29 @@ const EditMealScreen = (props) => {
   };
 
   const submitHandler = useCallback(() => {
-    console.log('submitting');
-  }, []);
+    if (editedMeal) {
+      dispatch(
+        mealsActions.updateMeal(
+          mealId,
+          menu,
+          title,
+          imageUrl,
+          description,
+          allergensArr
+        )
+      );
+    } else {
+      dispatch(
+        mealsActions.createMeal(
+          menu,
+          title,
+          imageUrl,
+          description,
+          allergensArr
+        )
+      );
+    }
+  }, [dispatch, mealId, menu, title, imageUrl, description, allergensArr]);
 
   useEffect(() => {
     props.navigation.setParams({ submit: submitHandler });
