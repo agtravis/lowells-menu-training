@@ -76,6 +76,7 @@ const EditMealScreen = (props) => {
         )
       );
     }
+    props.navigation.goBack();
   }, [dispatch, mealId, menu, title, imageUrl, description, allergensArr]);
 
   useEffect(() => {
