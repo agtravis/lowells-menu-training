@@ -5,15 +5,7 @@ import Colors from '../../constants/Colors';
 
 const CustomModal = (props) => {
   return (
-    <Modal
-      animationType="fade"
-      transparent={true}
-      visible={props.modalVisible}
-      onRequestClose={() => {
-        Alert.alert('Modal has been closed.');
-        props.toggleModal();
-      }}
-    >
+    <Modal animationType="fade" transparent={true} visible={props.modalVisible}>
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
           <Text style={styles.modalTextHeader}>{props.title}</Text>

@@ -6,7 +6,7 @@ import {
   TextInput,
   ScrollView,
   Platform,
-  Button,
+  Alert,
 } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useSelector, useDispatch } from 'react-redux';
@@ -66,33 +66,42 @@ const EditMealScreen = (props) => {
         )
       );
     } else {
-      dispatch(
-        mealsActions.createMeal(
-          menu,
-          title,
-          imageUrl,
-          description,
-          allergensArr
-        )
-      );
+      if (!menu) {
+        Alert.alert('Must Select One!', 'Is this meal Breakfast or Lunch?', [
+          { text: 'Go Back', style: 'cancel' },
+          {
+            text: 'Breakfast',
+            style: 'default',
+            onPress: () => {
+              setMenu('breakfast');
+            },
+          },
+          {
+            text: 'Lunch',
+            style: 'default',
+            onPress: () => {
+              setMenu('lunch');
+            },
+          },
+        ]);
+      } else {
+        dispatch(
+          mealsActions.createMeal(
+            menu,
+            title,
+            imageUrl,
+            description,
+            allergensArr
+          )
+        );
+        props.navigation.goBack();
+      }
     }
-    props.navigation.goBack();
   }, [dispatch, mealId, menu, title, imageUrl, description, allergensArr]);
 
   useEffect(() => {
     props.navigation.setParams({ submit: submitHandler });
   }, [submitHandler]);
-
-  const compileMeal = () => {
-    const newMeal = {
-      menu: menu,
-      title: title,
-      imageUrl: imageUrl,
-      description: description,
-      allergensArr: allergensArr,
-    };
-    console.log(newMeal);
-  };
 
   return (
     <ScrollView>
@@ -134,6 +143,9 @@ const EditMealScreen = (props) => {
             style={styles.input}
             value={title}
             onChangeText={(text) => setTitle(text)}
+            autoCapitalize="sentences"
+            autoCorrect
+            returnKeyType="next"
           />
         </View>
         <View style={styles.formControl}>
@@ -142,6 +154,8 @@ const EditMealScreen = (props) => {
             style={styles.input}
             value={imageUrl}
             onChangeText={(text) => setImageUrl(text)}
+            autoCapitalize="sentences"
+            returnKeyType="next"
           />
         </View>
         <View style={styles.formControl}>
@@ -150,6 +164,9 @@ const EditMealScreen = (props) => {
             style={styles.input}
             value={description}
             onChangeText={(text) => setDescription(text)}
+            autoCapitalize="sentences"
+            autoCorrect
+            returnKeyType="next"
           />
         </View>
         <View style={styles.formControl}>
@@ -170,8 +187,6 @@ const EditMealScreen = (props) => {
               />
             ))}
           </View>
-
-          <Button title="push" onPress={compileMeal} />
         </View>
       </View>
     </ScrollView>
