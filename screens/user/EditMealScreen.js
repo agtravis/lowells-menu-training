@@ -12,11 +12,13 @@ import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useSelector, useDispatch } from 'react-redux';
 import { CheckBox } from 'react-native-elements';
 
+import Modal from '../../components/UI/Modal';
 import HeaderButton from '../../components/UI/HeaderButton';
 import * as mealsActions from '../../store/actions/meals';
 import Allergens from '../../constants/Allergens';
 
 const EditMealScreen = (props) => {
+  const [modalVisible, setModalVisible] = useState(false);
   const mealId = props.navigation.getParam('mealId');
   const editedMeal = useSelector((state) =>
     state.meals.meals.find((meal) => meal.id === mealId)
@@ -40,6 +42,10 @@ const EditMealScreen = (props) => {
     setMenu(menuChoice);
   };
 
+  const toggleModalHandler = () => {
+    setModalVisible(!modalVisible);
+  };
+
   const pushToAllergensHandler = (newAllergen) => {
     if (allergensArr.includes(newAllergen)) {
       const filteredAllergens = allergensArr.filter(
@@ -54,6 +60,9 @@ const EditMealScreen = (props) => {
   };
 
   const submitHandler = useCallback(() => {
+    if (modalVisible) {
+      setModalVisible(false);
+    }
     if (editedMeal) {
       dispatch(
         mealsActions.updateMeal(
@@ -65,25 +74,10 @@ const EditMealScreen = (props) => {
           allergensArr
         )
       );
+      props.navigation.goBack();
     } else {
       if (!menu) {
-        Alert.alert('Must Select One!', 'Is this meal Breakfast or Lunch?', [
-          { text: 'Go Back', style: 'cancel' },
-          {
-            text: 'Breakfast',
-            style: 'default',
-            onPress: () => {
-              setMenu('breakfast');
-            },
-          },
-          {
-            text: 'Lunch',
-            style: 'default',
-            onPress: () => {
-              setMenu('lunch');
-            },
-          },
-        ]);
+        toggleModalHandler();
       } else {
         dispatch(
           mealsActions.createMeal(
@@ -105,6 +99,42 @@ const EditMealScreen = (props) => {
 
   return (
     <ScrollView>
+      <Modal
+        toggleModal={toggleModalHandler}
+        modalVisible={modalVisible}
+        title="Must Choose One:"
+        functionButtonOneTitle="Submit"
+        functionButtonOneFunction={submitHandler}
+      >
+        <View style={styles.checkBoxContainer}>
+          <CheckBox
+            containerStyle={{
+              width: '40%',
+            }}
+            checkedIcon="dot-circle-o"
+            uncheckedIcon="circle-o"
+            center
+            size={14}
+            textStyle={{ fontSize: 14 }}
+            title={'Breakfast'}
+            checked={menu === 'breakfast'}
+            onPress={() => toggleMenuHandler('breakfast')}
+          />
+          <CheckBox
+            containerStyle={{
+              width: '40%',
+            }}
+            checkedIcon="dot-circle-o"
+            uncheckedIcon="circle-o"
+            center
+            size={14}
+            textStyle={{ fontSize: 14 }}
+            title={'Lunch'}
+            checked={menu === 'lunch'}
+            onPress={() => toggleMenuHandler('lunch')}
+          />
+        </View>
+      </Modal>
       <View style={styles.form}>
         <View style={styles.formControl}>
           <Text style={styles.label}>Menu (select one)</Text>
