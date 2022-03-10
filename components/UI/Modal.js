@@ -10,24 +10,11 @@ const CustomModal = (props) => {
         <View style={styles.modalView}>
           <Text style={styles.modalTextHeader}>{props.title}</Text>
           <View style={styles.modalContentContainer}>{props.children}</View>
-          <View style={styles.actions}>
-            <View style={styles.button}>
-              <Button
-                title="Close"
-                color={Colors.primary}
-                onPress={() => props.toggleModal()}
-              />
-            </View>
-            {props.functionButtonOneTitle && (
-              <View style={styles.button}>
-                <Button
-                  title={props.functionButtonOneTitle}
-                  color={Colors.primary}
-                  onPress={() => props.functionButtonOneFunction()}
-                />
-              </View>
-            )}
-          </View>
+          <Button
+            title="Close"
+            color={Colors.primary}
+            onPress={() => props.toggleModal()}
+          />
         </View>
       </View>
     </Modal>
@@ -35,12 +22,6 @@ const CustomModal = (props) => {
 };
 
 const styles = StyleSheet.create({
-  button: {
-    marginHorizontal: 15,
-  },
-  actions: {
-    flexDirection: 'row',
-  },
   centeredView: {
     flex: 1,
     justifyContent: 'center',

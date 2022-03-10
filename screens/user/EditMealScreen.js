@@ -26,6 +26,7 @@ const EditMealScreen = (props) => {
 
   const [menu, setMenu] = useState(editedMeal ? editedMeal.menu : null);
   const [title, setTitle] = useState(editedMeal ? editedMeal.title : '');
+  const [titleIsValid, setTitleIsValid] = useState(false);
   const [imageUrl, setImageUrl] = useState(
     editedMeal ? editedMeal.imageUrl : ''
   );
@@ -63,6 +64,14 @@ const EditMealScreen = (props) => {
     if (modalVisible) {
       setModalVisible(false);
     }
+    if (!titleIsValid) {
+      Alert.alert('Wrong input!', 'Please check the errors in the form', [
+        {
+          text: 'Okay',
+        },
+      ]);
+      return;
+    }
     if (editedMeal) {
       dispatch(
         mealsActions.updateMeal(
@@ -97,14 +106,21 @@ const EditMealScreen = (props) => {
     props.navigation.setParams({ submit: submitHandler });
   }, [submitHandler]);
 
+  const titleChangeHandler = (text) => {
+    if (text.trim().length === 0) {
+      setTitleIsValid(false);
+    } else {
+      setTitleIsValid(true);
+    }
+    setTitle(text);
+  };
+
   return (
     <ScrollView>
       <Modal
         toggleModal={toggleModalHandler}
         modalVisible={modalVisible}
         title="Must Choose One:"
-        functionButtonOneTitle="Submit"
-        functionButtonOneFunction={submitHandler}
       >
         <View style={styles.checkBoxContainer}>
           <CheckBox
@@ -118,7 +134,10 @@ const EditMealScreen = (props) => {
             textStyle={{ fontSize: 14 }}
             title={'Breakfast'}
             checked={menu === 'breakfast'}
-            onPress={() => toggleMenuHandler('breakfast')}
+            onPress={() => {
+              toggleMenuHandler('breakfast');
+              toggleModalHandler();
+            }}
           />
           <CheckBox
             containerStyle={{
@@ -131,7 +150,10 @@ const EditMealScreen = (props) => {
             textStyle={{ fontSize: 14 }}
             title={'Lunch'}
             checked={menu === 'lunch'}
-            onPress={() => toggleMenuHandler('lunch')}
+            onPress={() => {
+              toggleMenuHandler('lunch');
+              toggleModalHandler();
+            }}
           />
         </View>
       </Modal>
@@ -172,11 +194,12 @@ const EditMealScreen = (props) => {
           <TextInput
             style={styles.input}
             value={title}
-            onChangeText={(text) => setTitle(text)}
+            onChangeText={titleChangeHandler}
             autoCapitalize="sentences"
             autoCorrect
             returnKeyType="next"
           />
+          {!titleIsValid && <Text>Please enter a valid title!</Text>}
         </View>
         <View style={styles.formControl}>
           <Text style={styles.label}>Image URL</Text>
