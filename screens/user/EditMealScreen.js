@@ -94,6 +94,7 @@ const EditMealScreen = (props) => {
       type: FORM_INPUT_UPDATE,
       value: text,
       isValid: isValid,
+      input: 'title',
     });
   };
 
