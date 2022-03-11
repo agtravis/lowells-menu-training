@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useReducer } from 'react';
 import {
   StyleSheet,
   View,
@@ -17,6 +17,13 @@ import HeaderButton from '../../components/UI/HeaderButton';
 import * as mealsActions from '../../store/actions/meals';
 import Allergens from '../../constants/Allergens';
 
+const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
+
+const formReducer = (state, action) => {
+  if (action.type === FORM_INPUT_UPDATE) {
+  }
+};
+
 const EditMealScreen = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
   const mealId = props.navigation.getParam('mealId');
@@ -24,20 +31,38 @@ const EditMealScreen = (props) => {
     state.meals.meals.find((meal) => meal.id === mealId)
   );
 
-  const [menu, setMenu] = useState(editedMeal ? editedMeal.menu : null);
-  const [title, setTitle] = useState(editedMeal ? editedMeal.title : '');
-  const [titleIsValid, setTitleIsValid] = useState(false);
-  const [imageUrl, setImageUrl] = useState(
-    editedMeal ? editedMeal.imageUrl : ''
-  );
-  const [description, setDescription] = useState(
-    editedMeal ? editedMeal.description : ''
-  );
-  const [allergensArr, setAllergensArr] = useState(
-    editedMeal ? editedMeal.allergens : []
-  );
-
   const dispatch = useDispatch();
+
+  const [formState, dispatchFormState] = useReducer(formReducer, {
+    inputValues: {
+      menu: editedMeal ? editedMeal.menu : null,
+      title: editedMeal ? editedMeal.title : '',
+      imageURl: editedMeal ? editedMeal.imageUrl : '',
+      description: editedMeal ? editedMeal.description : '',
+      allergens: editedMeal ? editedMeal.allergens : [],
+    },
+    inputValidities: {
+      menu: editedMeal ? true : false,
+      title: editedMeal ? true : false,
+      imageUrl: editedMeal ? true : false,
+      description: editedMeal ? true : false,
+      allergens: editedMeal ? true : false,
+    },
+    formIsValid: editedMeal ? true : false,
+  });
+
+  // const [menu, setMenu] = useState(editedMeal ? editedMeal.menu : null);
+  // const [title, setTitle] = useState(editedMeal ? editedMeal.title : '');
+  // const [titleIsValid, setTitleIsValid] = useState(false);
+  // const [imageUrl, setImageUrl] = useState(
+  //   editedMeal ? editedMeal.imageUrl : ''
+  // );
+  // const [description, setDescription] = useState(
+  //   editedMeal ? editedMeal.description : ''
+  // );
+  // const [allergensArr, setAllergensArr] = useState(
+  //   editedMeal ? editedMeal.allergens : []
+  // );
 
   const toggleMenuHandler = (menuChoice) => {
     setMenu(menuChoice);
@@ -60,6 +85,18 @@ const EditMealScreen = (props) => {
     }
   };
 
+  const titleChangeHandler = (text) => {
+    let isValid = false;
+    if (text.trim().length > 0) {
+      isValid = true;
+    }
+    dispatchFormState({
+      type: FORM_INPUT_UPDATE,
+      value: text,
+      isValid: isValid,
+    });
+  };
+
   const submitHandler = useCallback(() => {
     if (modalVisible) {
       setModalVisible(false);
@@ -80,7 +117,8 @@ const EditMealScreen = (props) => {
           title,
           imageUrl,
           description,
-          allergensArr
+          allergensArr,
+          titleIsValid
         )
       );
       props.navigation.goBack();
@@ -105,15 +143,6 @@ const EditMealScreen = (props) => {
   useEffect(() => {
     props.navigation.setParams({ submit: submitHandler });
   }, [submitHandler]);
-
-  const titleChangeHandler = (text) => {
-    if (text.trim().length === 0) {
-      setTitleIsValid(false);
-    } else {
-      setTitleIsValid(true);
-    }
-    setTitle(text);
-  };
 
   return (
     <ScrollView>
