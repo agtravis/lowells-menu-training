@@ -69,19 +69,6 @@ const EditMealScreen = (props) => {
     formIsValid: editedMeal ? true : false,
   });
 
-  // const [menu, setMenu] = useState(editedMeal ? editedMeal.menu : null);
-  // const [title, setTitle] = useState(editedMeal ? editedMeal.title : '');
-  // const [titleIsValid, setTitleIsValid] = useState(false);
-  // const [imageUrl, setImageUrl] = useState(
-  //   editedMeal ? editedMeal.imageUrl : ''
-  // );
-  // const [description, setDescription] = useState(
-  //   editedMeal ? editedMeal.description : ''
-  // );
-  // const [allergensArr, setAllergensArr] = useState(
-  //   editedMeal ? editedMeal.allergens : []
-  // );
-
   const toggleMenuHandler = (menuChoice) => {
     dispatchFormState({
       type: FORM_INPUT_UPDATE,
