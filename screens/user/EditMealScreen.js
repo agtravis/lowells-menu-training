@@ -21,7 +21,25 @@ const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 
 const formReducer = (state, action) => {
   if (action.type === FORM_INPUT_UPDATE) {
+    const updatedValues = {
+      ...state.inputValues,
+      [action.input]: action.value,
+    };
+    const updatedValidities = {
+      ...state.inputValidities,
+      [action.input]: action.isValid,
+    };
+    let updatedFormIsValid = true;
+    for (const key in updatedValidities) {
+      updatedFormIsValid = updatedFormIsValid && updatedValidities[key];
+    }
+    return {
+      formIsValid: updatedFormIsValid,
+      inputValidities: updatedValidities,
+      inputValues: updatedValues,
+    };
   }
+  return state;
 };
 
 const EditMealScreen = (props) => {
@@ -37,7 +55,7 @@ const EditMealScreen = (props) => {
     inputValues: {
       menu: editedMeal ? editedMeal.menu : null,
       title: editedMeal ? editedMeal.title : '',
-      imageURl: editedMeal ? editedMeal.imageUrl : '',
+      imageUrl: editedMeal ? editedMeal.imageUrl : '',
       description: editedMeal ? editedMeal.description : '',
       allergens: editedMeal ? editedMeal.allergens : [],
     },
@@ -46,7 +64,7 @@ const EditMealScreen = (props) => {
       title: editedMeal ? true : false,
       imageUrl: editedMeal ? true : false,
       description: editedMeal ? true : false,
-      allergens: editedMeal ? true : false,
+      allergens: true,
     },
     formIsValid: editedMeal ? true : false,
   });
@@ -65,7 +83,12 @@ const EditMealScreen = (props) => {
   // );
 
   const toggleMenuHandler = (menuChoice) => {
-    setMenu(menuChoice);
+    dispatchFormState({
+      type: FORM_INPUT_UPDATE,
+      value: menuChoice,
+      isValid: true,
+      input: 'menu',
+    });
   };
 
   const toggleModalHandler = () => {
@@ -73,19 +96,29 @@ const EditMealScreen = (props) => {
   };
 
   const pushToAllergensHandler = (newAllergen) => {
-    if (allergensArr.includes(newAllergen)) {
-      const filteredAllergens = allergensArr.filter(
+    if (formState.inputValues.allergens.includes(newAllergen)) {
+      const filteredAllergens = formState.inputValues.allergens.filter(
         (allergen) => allergen !== newAllergen
       );
-      setAllergensArr(filteredAllergens);
+      dispatchFormState({
+        type: FORM_INPUT_UPDATE,
+        value: filteredAllergens,
+        input: 'allergens',
+        isValid: true,
+      });
     } else {
-      const newAllergens = [...allergensArr, newAllergen];
+      const newAllergens = [...formState.inputValues.allergens, newAllergen];
       const sortedAllergens = newAllergens.sort((a, b) => (a > b ? 1 : -1));
-      setAllergensArr(sortedAllergens);
+      dispatchFormState({
+        type: FORM_INPUT_UPDATE,
+        value: sortedAllergens,
+        input: 'allergens',
+        isValid: true,
+      });
     }
   };
 
-  const titleChangeHandler = (text) => {
+  const textChangeHandler = (inputIdentifier, text) => {
     let isValid = false;
     if (text.trim().length > 0) {
       isValid = true;
@@ -94,7 +127,7 @@ const EditMealScreen = (props) => {
       type: FORM_INPUT_UPDATE,
       value: text,
       isValid: isValid,
-      input: 'title',
+      input: inputIdentifier,
     });
   };
 
@@ -102,7 +135,7 @@ const EditMealScreen = (props) => {
     if (modalVisible) {
       setModalVisible(false);
     }
-    if (!titleIsValid) {
+    if (!formState.formIsValid) {
       Alert.alert('Wrong input!', 'Please check the errors in the form', [
         {
           text: 'Okay',
@@ -114,32 +147,31 @@ const EditMealScreen = (props) => {
       dispatch(
         mealsActions.updateMeal(
           mealId,
-          menu,
-          title,
-          imageUrl,
-          description,
-          allergensArr,
-          titleIsValid
+          formState.inputValues.menu,
+          formState.inputValues.title,
+          formState.inputValues.imageUrl,
+          formState.inputValues.description,
+          formState.inputValues.allergens
         )
       );
       props.navigation.goBack();
     } else {
-      if (!menu) {
+      if (!formState.inputValues.menu) {
         toggleModalHandler();
       } else {
         dispatch(
           mealsActions.createMeal(
-            menu,
-            title,
-            imageUrl,
-            description,
-            allergensArr
+            formState.inputValues.menu,
+            formState.inputValues.title,
+            formState.inputValues.imageUrl,
+            formState.inputValues.description,
+            formState.inputValues.allergens
           )
         );
         props.navigation.goBack();
       }
     }
-  }, [dispatch, mealId, menu, title, imageUrl, description, allergensArr]);
+  }, [dispatch, mealId, formState]);
 
   useEffect(() => {
     props.navigation.setParams({ submit: submitHandler });
@@ -163,7 +195,7 @@ const EditMealScreen = (props) => {
             size={14}
             textStyle={{ fontSize: 14 }}
             title={'Breakfast'}
-            checked={menu === 'breakfast'}
+            checked={formState.inputValues.menu === 'breakfast'}
             onPress={() => {
               toggleMenuHandler('breakfast');
               toggleModalHandler();
@@ -179,7 +211,7 @@ const EditMealScreen = (props) => {
             size={14}
             textStyle={{ fontSize: 14 }}
             title={'Lunch'}
-            checked={menu === 'lunch'}
+            checked={formState.inputValues.menu === 'lunch'}
             onPress={() => {
               toggleMenuHandler('lunch');
               toggleModalHandler();
@@ -201,7 +233,7 @@ const EditMealScreen = (props) => {
               size={14}
               textStyle={{ fontSize: 16 }}
               title={'Breakfast'}
-              checked={menu === 'breakfast'}
+              checked={formState.inputValues.menu === 'breakfast'}
               onPress={() => toggleMenuHandler('breakfast')}
             />
             <CheckBox
@@ -214,7 +246,7 @@ const EditMealScreen = (props) => {
               size={14}
               textStyle={{ fontSize: 16 }}
               title={'Lunch'}
-              checked={menu === 'lunch'}
+              checked={formState.inputValues.menu === 'lunch'}
               onPress={() => toggleMenuHandler('lunch')}
             />
           </View>
@@ -223,20 +255,22 @@ const EditMealScreen = (props) => {
           <Text style={styles.label}>Title</Text>
           <TextInput
             style={styles.input}
-            value={title}
-            onChangeText={titleChangeHandler}
+            value={formState.inputValues.title}
+            onChangeText={(text) => textChangeHandler('title', text)}
             autoCapitalize="sentences"
             autoCorrect
             returnKeyType="next"
           />
-          {!titleIsValid && <Text>Please enter a valid title!</Text>}
+          {!formState.inputValidities.title && (
+            <Text>Please enter a valid title!</Text>
+          )}
         </View>
         <View style={styles.formControl}>
           <Text style={styles.label}>Image URL</Text>
           <TextInput
             style={styles.input}
-            value={imageUrl}
-            onChangeText={(text) => setImageUrl(text)}
+            value={formState.inputValues.imageUrl}
+            onChangeText={(text) => textChangeHandler('imageUrl', text)}
             autoCapitalize="sentences"
             returnKeyType="next"
           />
@@ -245,8 +279,8 @@ const EditMealScreen = (props) => {
           <Text style={styles.label}>Description</Text>
           <TextInput
             style={styles.input}
-            value={description}
-            onChangeText={(text) => setDescription(text)}
+            value={formState.inputValues.description}
+            onChangeText={(text) => textChangeHandler('description', text)}
             autoCapitalize="sentences"
             autoCorrect
             returnKeyType="next"
@@ -265,7 +299,7 @@ const EditMealScreen = (props) => {
                 size={10}
                 textStyle={{ fontSize: 16 }}
                 title={allergen}
-                checked={allergensArr.includes(allergen)}
+                checked={formState.inputValues.allergens.includes(allergen)}
                 onPress={() => pushToAllergensHandler(allergen)}
               />
             ))}
