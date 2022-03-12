@@ -14,6 +14,7 @@ import { CheckBox } from 'react-native-elements';
 
 import Modal from '../../components/UI/Modal';
 import HeaderButton from '../../components/UI/HeaderButton';
+import Input from '../../components/UI/Input';
 import * as mealsActions from '../../store/actions/meals';
 import Allergens from '../../constants/Allergens';
 
@@ -238,41 +239,26 @@ const EditMealScreen = (props) => {
             />
           </View>
         </View>
-        <View style={styles.formControl}>
-          <Text style={styles.label}>Title</Text>
-          <TextInput
-            style={styles.input}
-            value={formState.inputValues.title}
-            onChangeText={(text) => textChangeHandler('title', text)}
-            autoCapitalize="sentences"
-            autoCorrect
-            returnKeyType="next"
-          />
-          {!formState.inputValidities.title && (
-            <Text>Please enter a valid title!</Text>
-          )}
-        </View>
-        <View style={styles.formControl}>
-          <Text style={styles.label}>Image URL</Text>
-          <TextInput
-            style={styles.input}
-            value={formState.inputValues.imageUrl}
-            onChangeText={(text) => textChangeHandler('imageUrl', text)}
-            autoCapitalize="sentences"
-            returnKeyType="next"
-          />
-        </View>
-        <View style={styles.formControl}>
-          <Text style={styles.label}>Description</Text>
-          <TextInput
-            style={styles.input}
-            value={formState.inputValues.description}
-            onChangeText={(text) => textChangeHandler('description', text)}
-            autoCapitalize="sentences"
-            autoCorrect
-            returnKeyType="next"
-          />
-        </View>
+        <Input
+          label="Title"
+          errorText="Please enter a valid title!"
+          autoCapitalize="sentences"
+          autoCorrect
+          returnKeyType="next"
+        />
+        <Input
+          label="Image URL"
+          errorText="Please enter a valid URL!"
+          returnKeyType="next"
+        />
+        <Input
+          label="Description"
+          errorText="Please enter a valid description!"
+          autoCapitalize="sentences"
+          autoCorrect
+          multiline
+          numberOfLines={3}
+        />
         <View style={styles.formControl}>
           <Text style={styles.label}>Allergens (select all that apply)</Text>
           <View style={styles.checkBoxContainer}>
