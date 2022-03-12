@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useCallback, useReducer } from 'react';
+import React, { useEffect, useCallback, useReducer } from 'react';
 import {
   StyleSheet,
   View,
   Text,
-  TextInput,
   ScrollView,
   Platform,
   Alert,
@@ -12,7 +11,6 @@ import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useSelector, useDispatch } from 'react-redux';
 import { CheckBox } from 'react-native-elements';
 
-import Modal from '../../components/UI/Modal';
 import HeaderButton from '../../components/UI/HeaderButton';
 import Input from '../../components/UI/Input';
 import * as mealsActions from '../../store/actions/meals';
@@ -44,7 +42,6 @@ const formReducer = (state, action) => {
 };
 
 const EditMealScreen = (props) => {
-  const [modalVisible, setModalVisible] = useState(false);
   const mealId = props.navigation.getParam('mealId');
   const editedMeal = useSelector((state) =>
     state.meals.meals.find((meal) => meal.id === mealId)
@@ -79,10 +76,6 @@ const EditMealScreen = (props) => {
     });
   };
 
-  const toggleModalHandler = () => {
-    setModalVisible(!modalVisible);
-  };
-
   const pushToAllergensHandler = (newAllergen) => {
     if (formState.inputValues.allergens.includes(newAllergen)) {
       const filteredAllergens = formState.inputValues.allergens.filter(
@@ -106,23 +99,19 @@ const EditMealScreen = (props) => {
     }
   };
 
-  const textChangeHandler = (inputIdentifier, text) => {
-    let isValid = false;
-    if (text.trim().length > 0) {
-      isValid = true;
-    }
-    dispatchFormState({
-      type: FORM_INPUT_UPDATE,
-      value: text,
-      isValid: isValid,
-      input: inputIdentifier,
-    });
-  };
+  const inputChangeHandler = useCallback(
+    (inputIdentifier, inputValue, inputValidity) => {
+      dispatchFormState({
+        type: FORM_INPUT_UPDATE,
+        value: inputValue,
+        isValid: inputValidity,
+        input: inputIdentifier,
+      });
+    },
+    [dispatchFormState]
+  );
 
   const submitHandler = useCallback(() => {
-    if (modalVisible) {
-      setModalVisible(false);
-    }
     if (!formState.formIsValid) {
       Alert.alert('Wrong input!', 'Please check the errors in the form', [
         {
@@ -142,23 +131,18 @@ const EditMealScreen = (props) => {
           formState.inputValues.allergens
         )
       );
-      props.navigation.goBack();
     } else {
-      if (!formState.inputValues.menu) {
-        toggleModalHandler();
-      } else {
-        dispatch(
-          mealsActions.createMeal(
-            formState.inputValues.menu,
-            formState.inputValues.title,
-            formState.inputValues.imageUrl,
-            formState.inputValues.description,
-            formState.inputValues.allergens
-          )
-        );
-        props.navigation.goBack();
-      }
+      dispatch(
+        mealsActions.createMeal(
+          formState.inputValues.menu,
+          formState.inputValues.title,
+          formState.inputValues.imageUrl,
+          formState.inputValues.description,
+          formState.inputValues.allergens
+        )
+      );
     }
+    props.navigation.goBack();
   }, [dispatch, mealId, formState]);
 
   useEffect(() => {
@@ -167,46 +151,6 @@ const EditMealScreen = (props) => {
 
   return (
     <ScrollView>
-      <Modal
-        toggleModal={toggleModalHandler}
-        modalVisible={modalVisible}
-        title="Must Choose One:"
-      >
-        <View style={styles.checkBoxContainer}>
-          <CheckBox
-            containerStyle={{
-              width: '40%',
-            }}
-            checkedIcon="dot-circle-o"
-            uncheckedIcon="circle-o"
-            center
-            size={14}
-            textStyle={{ fontSize: 14 }}
-            title={'Breakfast'}
-            checked={formState.inputValues.menu === 'breakfast'}
-            onPress={() => {
-              toggleMenuHandler('breakfast');
-              toggleModalHandler();
-            }}
-          />
-          <CheckBox
-            containerStyle={{
-              width: '40%',
-            }}
-            checkedIcon="dot-circle-o"
-            uncheckedIcon="circle-o"
-            center
-            size={14}
-            textStyle={{ fontSize: 14 }}
-            title={'Lunch'}
-            checked={formState.inputValues.menu === 'lunch'}
-            onPress={() => {
-              toggleMenuHandler('lunch');
-              toggleModalHandler();
-            }}
-          />
-        </View>
-      </Modal>
       <View style={styles.form}>
         <View style={styles.formControl}>
           <Text style={styles.label}>Menu (select one)</Text>
@@ -238,26 +182,45 @@ const EditMealScreen = (props) => {
               onPress={() => toggleMenuHandler('lunch')}
             />
           </View>
+          {formState.inputValidities.menu === false && (
+            <Text>Must select one!</Text>
+          )}
         </View>
         <Input
+          id="title"
           label="Title"
           errorText="Please enter a valid title!"
           autoCapitalize="sentences"
           autoCorrect
           returnKeyType="next"
+          onInputChange={inputChangeHandler}
+          initialValue={editedMeal ? editedMeal.title : ''}
+          initiallyValid={!!editedMeal}
+          required
         />
         <Input
+          id="imageUrl"
           label="Image URL"
           errorText="Please enter a valid URL!"
           returnKeyType="next"
+          onInputChange={inputChangeHandler}
+          initialValue={editedMeal ? editedMeal.imageUrl : ''}
+          initiallyValid={!!editedMeal}
+          required
         />
         <Input
+          id="description"
           label="Description"
           errorText="Please enter a valid description!"
           autoCapitalize="sentences"
+          onInputChange={inputChangeHandler}
           autoCorrect
           multiline
           numberOfLines={3}
+          initialValue={editedMeal ? editedMeal.description : ''}
+          initiallyValid={!!editedMeal}
+          required
+          minLength={5}
         />
         <View style={styles.formControl}>
           <Text style={styles.label}>Allergens (select all that apply)</Text>
