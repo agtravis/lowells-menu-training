@@ -6,6 +6,7 @@ import {
   ScrollView,
   Platform,
   Alert,
+  KeyboardAvoidingView,
 } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useSelector, useDispatch } from 'react-redux';
@@ -17,6 +18,7 @@ import * as mealsActions from '../../store/actions/meals';
 import Allergens from '../../constants/Allergens';
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
+const SUBMIT_ATTEMPTED = 'SUBMIT_ATTEMPTED';
 
 const formReducer = (state, action) => {
   if (action.type === FORM_INPUT_UPDATE) {
@@ -33,9 +35,16 @@ const formReducer = (state, action) => {
       updatedFormIsValid = updatedFormIsValid && updatedValidities[key];
     }
     return {
+      ...state,
       formIsValid: updatedFormIsValid,
       inputValidities: updatedValidities,
       inputValues: updatedValues,
+    };
+  }
+  if (action.type === SUBMIT_ATTEMPTED) {
+    return {
+      ...state,
+      submitAttempted: true,
     };
   }
   return state;
@@ -65,6 +74,7 @@ const EditMealScreen = (props) => {
       allergens: true,
     },
     formIsValid: editedMeal ? true : false,
+    submitAttempted: false,
   });
 
   const toggleMenuHandler = (menuChoice) => {
@@ -113,11 +123,16 @@ const EditMealScreen = (props) => {
 
   const submitHandler = useCallback(() => {
     if (!formState.formIsValid) {
-      Alert.alert('Wrong input!', 'Please check the errors in the form', [
+      Alert.alert('Wrong input(s)!', 'Please check the errors in the form', [
         {
           text: 'Okay',
         },
       ]);
+      if (!formState.inputValues.menu) {
+        dispatchFormState({
+          type: SUBMIT_ATTEMPTED,
+        });
+      }
       return;
     }
     if (editedMeal) {
@@ -143,106 +158,114 @@ const EditMealScreen = (props) => {
       );
     }
     props.navigation.goBack();
-  }, [dispatch, mealId, formState]);
+  }, [dispatch, dispatchFormState, mealId, formState]);
 
   useEffect(() => {
     props.navigation.setParams({ submit: submitHandler });
   }, [submitHandler]);
 
   return (
-    <ScrollView>
-      <View style={styles.form}>
-        <View style={styles.formControl}>
-          <Text style={styles.label}>Menu (select one)</Text>
-          <View style={styles.checkBoxContainer}>
-            <CheckBox
-              containerStyle={{
-                width: '40%',
-              }}
-              checkedIcon="dot-circle-o"
-              uncheckedIcon="circle-o"
-              center
-              size={14}
-              textStyle={{ fontSize: 16 }}
-              title={'Breakfast'}
-              checked={formState.inputValues.menu === 'breakfast'}
-              onPress={() => toggleMenuHandler('breakfast')}
-            />
-            <CheckBox
-              containerStyle={{
-                width: '40%',
-              }}
-              checkedIcon="dot-circle-o"
-              uncheckedIcon="circle-o"
-              center
-              size={14}
-              textStyle={{ fontSize: 16 }}
-              title={'Lunch'}
-              checked={formState.inputValues.menu === 'lunch'}
-              onPress={() => toggleMenuHandler('lunch')}
-            />
-          </View>
-          {formState.inputValidities.menu === false && (
-            <Text>Must select one!</Text>
-          )}
-        </View>
-        <Input
-          id="title"
-          label="Title"
-          errorText="Please enter a valid title!"
-          autoCapitalize="sentences"
-          autoCorrect
-          returnKeyType="next"
-          onInputChange={inputChangeHandler}
-          initialValue={editedMeal ? editedMeal.title : ''}
-          initiallyValid={!!editedMeal}
-          required
-        />
-        <Input
-          id="imageUrl"
-          label="Image URL"
-          errorText="Please enter a valid URL!"
-          returnKeyType="next"
-          onInputChange={inputChangeHandler}
-          initialValue={editedMeal ? editedMeal.imageUrl : ''}
-          initiallyValid={!!editedMeal}
-          required
-        />
-        <Input
-          id="description"
-          label="Description"
-          errorText="Please enter a valid description!"
-          autoCapitalize="sentences"
-          onInputChange={inputChangeHandler}
-          autoCorrect
-          multiline
-          numberOfLines={3}
-          initialValue={editedMeal ? editedMeal.description : ''}
-          initiallyValid={!!editedMeal}
-          required
-          minLength={5}
-        />
-        <View style={styles.formControl}>
-          <Text style={styles.label}>Allergens (select all that apply)</Text>
-          <View style={styles.checkBoxContainer}>
-            {Allergens.map((allergen, index) => (
+    <KeyboardAvoidingView style={{ flex: 1 }}>
+      <ScrollView>
+        <View style={styles.form}>
+          <View style={styles.formControl}>
+            <Text style={styles.label}>Menu (select one)</Text>
+            <View style={styles.checkBoxContainer}>
               <CheckBox
                 containerStyle={{
                   width: '40%',
                 }}
-                key={index}
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
                 center
-                size={10}
+                size={14}
                 textStyle={{ fontSize: 16 }}
-                title={allergen}
-                checked={formState.inputValues.allergens.includes(allergen)}
-                onPress={() => pushToAllergensHandler(allergen)}
+                title={'Breakfast'}
+                checked={formState.inputValues.menu === 'breakfast'}
+                onPress={() => toggleMenuHandler('breakfast')}
               />
-            ))}
+              <CheckBox
+                containerStyle={{
+                  width: '40%',
+                }}
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+                center
+                size={14}
+                textStyle={{ fontSize: 16 }}
+                title={'Lunch'}
+                checked={formState.inputValues.menu === 'lunch'}
+                onPress={() => toggleMenuHandler('lunch')}
+              />
+            </View>
+            {formState.inputValidities.menu === false &&
+              formState.submitAttempted && (
+                <View style={styles.errorContainer}>
+                  <Text style={styles.errorText}>Must select one!</Text>
+                </View>
+              )}
+          </View>
+          <Input
+            id="title"
+            label="Title"
+            errorText="Please enter a valid title!"
+            autoCapitalize="sentences"
+            autoCorrect
+            returnKeyType="next"
+            onInputChange={inputChangeHandler}
+            initialValue={editedMeal ? editedMeal.title : ''}
+            initiallyValid={!!editedMeal}
+            required
+            submitAttempted={formState.submitAttempted}
+          />
+          <Input
+            id="imageUrl"
+            label="Image URL"
+            errorText="Please enter a valid URL!"
+            returnKeyType="next"
+            onInputChange={inputChangeHandler}
+            initialValue={editedMeal ? editedMeal.imageUrl : ''}
+            initiallyValid={!!editedMeal}
+            required
+            submitAttempted={formState.submitAttempted}
+          />
+          <Input
+            id="description"
+            label="Description"
+            errorText="Please enter a valid description!"
+            autoCapitalize="sentences"
+            onInputChange={inputChangeHandler}
+            autoCorrect
+            multiline
+            numberOfLines={3}
+            initialValue={editedMeal ? editedMeal.description : ''}
+            initiallyValid={!!editedMeal}
+            required
+            minLength={5}
+            submitAttempted={formState.submitAttempted}
+          />
+          <View style={styles.formControl}>
+            <Text style={styles.label}>Allergens (select all that apply)</Text>
+            <View style={styles.checkBoxContainer}>
+              {Allergens.map((allergen, index) => (
+                <CheckBox
+                  containerStyle={{
+                    width: '40%',
+                  }}
+                  key={index}
+                  center
+                  size={10}
+                  textStyle={{ fontSize: 16 }}
+                  title={allergen}
+                  checked={formState.inputValues.allergens.includes(allergen)}
+                  onPress={() => pushToAllergensHandler(allergen)}
+                />
+              ))}
+            </View>
           </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -265,6 +288,14 @@ EditMealScreen.navigationOptions = (navData) => {
 };
 
 const styles = StyleSheet.create({
+  errorContainer: {
+    marginVertical: 5,
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 13,
+    fontFamily: 'ubuntu',
+  },
   checkBoxContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',

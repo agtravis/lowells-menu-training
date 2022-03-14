@@ -75,12 +75,24 @@ const Input = (props) => {
         onChangeText={textChangeHandler}
         onBlur={lostFocusHandler}
       />
-      {!inputState.isValid && <Text>{props.errorText}</Text>}
+      {!inputState.isValid && (inputState.touched || props.submitAttempted) && (
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>{props.errorText}</Text>
+        </View>
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  errorContainer: {
+    marginVertical: 5,
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 13,
+    fontFamily: 'ubuntu',
+  },
   formControl: {
     width: '100%',
   },
