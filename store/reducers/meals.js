@@ -10,7 +10,7 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case CREATE_MEAL:
       const newMeal = new Meal(
-        new Date().toString(),
+        action.mealData.id,
         action.mealData.menu,
         action.mealData.title,
         action.mealData.imageUrl,

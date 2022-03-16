@@ -1,12 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import {
-  FlatList,
-  Platform,
-  Button,
-  StyleSheet,
-  View,
-  Text,
-} from 'react-native';
+import { FlatList, Platform, Button, StyleSheet, View } from 'react-native';
 import { CheckBox } from 'react-native-elements';
 import { useDispatch, useSelector } from 'react-redux';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';

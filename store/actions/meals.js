@@ -10,15 +10,39 @@ export const deleteMeal = (mealId) => {
 };
 
 export const createMeal = (menu, title, imageUrl, description, allergens) => {
-  return {
-    type: CREATE_MEAL,
-    mealData: {
-      menu,
-      title,
-      imageUrl,
-      description,
-      allergens,
-    },
+  return async (dispatch) => {
+    const response = await fetch(
+      'https://lowells-menu-training-default-rtdb.firebaseio.com/meals.json',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          menu,
+          title,
+          imageUrl,
+          description,
+          allergens,
+        }),
+      }
+    );
+
+    const resData = await response.json();
+
+    console.log(resData);
+
+    dispatch({
+      type: CREATE_MEAL,
+      mealData: {
+        id: resData.name,
+        menu,
+        title,
+        imageUrl,
+        description,
+        allergens,
+      },
+    });
   };
 };
 
