@@ -1,5 +1,13 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { FlatList, Platform, Button, StyleSheet, View } from 'react-native';
+import {
+  FlatList,
+  Platform,
+  Button,
+  ActivityIndicator,
+  StyleSheet,
+  View,
+  Text,
+} from 'react-native';
 import { CheckBox } from 'react-native-elements';
 import { useDispatch, useSelector } from 'react-redux';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
@@ -13,8 +21,10 @@ import Colors from '../../constants/Colors';
 import Allergens from '../../constants/Allergens';
 
 const MealsOverviewScreen = (props) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [menu, setMenu] = useState('breakfast');
+  const [error, setError] = useState('');
   const [filters, setFilters] = useState({
     Beef: true,
     Chicken: true,
@@ -76,9 +86,20 @@ const MealsOverviewScreen = (props) => {
 
   const dispatch = useDispatch();
 
+  const loadMeals = useCallback(async () => {
+    setError('');
+    setIsLoading(true);
+    try {
+      await dispatch(mealsActions.fetchMeals());
+    } catch (err) {
+      setError(err.message);
+    }
+    setIsLoading(false);
+  }, [dispatch, setIsLoading, setError, mealsActions]);
+
   useEffect(() => {
-    dispatch(mealsActions.fetchMeals());
-  }, [dispatch]);
+    loadMeals();
+  }, [loadMeals]);
 
   const filterChangeHandler = (name) => {
     setFilters((prevState) => ({
@@ -141,44 +162,86 @@ const MealsOverviewScreen = (props) => {
           ))}
         </View>
       </Modal>
-      <FlatList
-        contentContainerStyle={styles.flatList}
-        data={meals}
-        keyExtractor={(item) => item.id}
-        renderItem={(itemData) => (
-          <MealItem
-            image={itemData.item.imageUrl}
-            title={itemData.item.title}
-            onSelect={() => {
-              selectItemHandler(itemData.item.id, itemData.item.title);
-            }}
-          >
-            <Button
-              title="View Details"
-              onPress={() => {
+      {isLoading && (
+        <View style={{ ...styles.centered, marginTop: -125 }}>
+          <ActivityIndicator size="large" color={Colors.primary} />
+        </View>
+      )}
+      {meals.length < 1 && (
+        <View style={styles.centered}>
+          <View style={{ width: '90%' }}>
+            <Text style={styles.text}>No Meals to Display!</Text>
+            {error.length > 0 && (
+              <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                <View style={{ marginVertical: 25 }}>
+                  <Text style={{ ...styles.text, color: 'red' }}>{error}</Text>
+                </View>
+                <View
+                  style={{
+                    marginVertical: 25,
+                    width: 170,
+                  }}
+                >
+                  <Button
+                    title="Try Again"
+                    color={Colors.primary}
+                    onPress={loadMeals}
+                  />
+                </View>
+              </View>
+            )}
+          </View>
+        </View>
+      )}
+      {!isLoading && meals.length >= 1 && (
+        <FlatList
+          contentContainerStyle={styles.flatList}
+          data={meals}
+          keyExtractor={(item) => item.id}
+          renderItem={(itemData) => (
+            <MealItem
+              image={itemData.item.imageUrl}
+              title={itemData.item.title}
+              onSelect={() => {
                 selectItemHandler(itemData.item.id, itemData.item.title);
               }}
-              color={Colors.primary}
-            />
-            <Button
-              title={
-                favorites.includes(itemData.item)
-                  ? 'Remove from Favorites'
-                  : 'Add to Favorites'
-              }
-              onPress={() => {
-                dispatch(favoritesActions.addToFavorites(itemData.item));
-              }}
-              color={Colors.primary}
-            />
-          </MealItem>
-        )}
-      />
+            >
+              <Button
+                title="View Details"
+                onPress={() => {
+                  selectItemHandler(itemData.item.id, itemData.item.title);
+                }}
+                color={Colors.primary}
+              />
+              <Button
+                title={
+                  favorites.includes(itemData.item)
+                    ? 'Remove from Favorites'
+                    : 'Add to Favorites'
+                }
+                onPress={() => {
+                  dispatch(favoritesActions.addToFavorites(itemData.item));
+                }}
+                color={Colors.primary}
+              />
+            </MealItem>
+          )}
+        />
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  text: {
+    fontFamily: 'ubuntu-bold',
+    textAlign: 'center',
+  },
+  centered: {
+    height: '80%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   flatList: { paddingBottom: 75 },
   checkBoxContainer: {
     flexDirection: 'row',
