@@ -1,13 +1,22 @@
-import MEALS from '../../data/dummy-data';
 import Meal from '../../models/meal';
-import { CREATE_MEAL, DELETE_MEAL, UPDATE_MEAL } from '../actions/meals';
+import {
+  CREATE_MEAL,
+  DELETE_MEAL,
+  SET_MEALS,
+  UPDATE_MEAL,
+} from '../actions/meals';
 
 const initialState = {
-  meals: MEALS,
+  meals: [],
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case SET_MEALS:
+      return {
+        ...state,
+        meals: action.meals,
+      };
     case CREATE_MEAL:
       const newMeal = new Meal(
         action.mealData.id,

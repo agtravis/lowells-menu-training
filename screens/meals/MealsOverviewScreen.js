@@ -8,6 +8,7 @@ import MealItem from '../../components/trainingApp/MealItem';
 import HeaderButton from '../../components/UI/HeaderButton';
 import Modal from '../../components/UI/Modal';
 import * as favoritesActions from '../../store/actions/favorites';
+import * as mealsActions from '../../store/actions/meals';
 import Colors from '../../constants/Colors';
 import Allergens from '../../constants/Allergens';
 
@@ -74,6 +75,10 @@ const MealsOverviewScreen = (props) => {
   const favorites = useSelector((state) => state.favorites.favorites);
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(mealsActions.fetchMeals());
+  }, [dispatch]);
 
   const filterChangeHandler = (name) => {
     setFilters((prevState) => ({

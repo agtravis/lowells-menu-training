@@ -1,10 +1,10 @@
-import MEALS from '../../data/dummy-data';
 import { ADD_TO_FAVORITES } from '../actions/favorites';
 import { DELETE_MEAL } from '../actions/meals';
 
 const initialState = {
+  // once user in place, watch video 205
   //get favorite meals from database, user favorites
-  favorites: MEALS.filter((meal) => meal.id === '001'),
+  favorites: [],
 };
 
 export default (state = initialState, action) => {

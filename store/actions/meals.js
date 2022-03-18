@@ -1,6 +1,36 @@
+import Meal from '../../models/meal';
+
 export const DELETE_MEAL = 'DELETE_MEAL';
 export const CREATE_MEAL = 'CREATE_MEAL';
 export const UPDATE_MEAL = 'UPDATE_MEAL';
+export const SET_MEALS = 'SET_MEALS';
+
+export const fetchMeals = () => {
+  return async (dispatch) => {
+    const response = await fetch(
+      'https://lowells-menu-training-default-rtdb.firebaseio.com/meals.json'
+    );
+
+    const resData = await response.json();
+
+    const loadedMeals = [];
+
+    for (const [key, value] of Object.entries(resData)) {
+      loadedMeals.push(
+        new Meal(
+          key,
+          value.menu,
+          value.title,
+          value.imageUrl,
+          value.description,
+          value.allergens
+        )
+      );
+    }
+
+    dispatch({ type: SET_MEALS, meals: loadedMeals });
+  };
+};
 
 export const deleteMeal = (mealId) => {
   return {
@@ -29,8 +59,6 @@ export const createMeal = (menu, title, imageUrl, description, allergens) => {
     );
 
     const resData = await response.json();
-
-    console.log(resData);
 
     dispatch({
       type: CREATE_MEAL,
