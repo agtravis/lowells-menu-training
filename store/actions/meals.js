@@ -47,9 +47,17 @@ export const fetchMeals = () => {
 };
 
 export const deleteMeal = (mealId) => {
-  return {
-    type: DELETE_MEAL,
-    mid: mealId,
+  return async (dispatch) => {
+    await fetch(
+      `https://lowells-menu-training-default-rtdb.firebaseio.com/meals/${mealId}.json`,
+      {
+        method: 'DELETE',
+      }
+    );
+    dispatch({
+      type: DELETE_MEAL,
+      mid: mealId,
+    });
   };
 };
 
@@ -96,15 +104,34 @@ export const updateMeal = (
   description,
   allergens
 ) => {
-  return {
-    type: UPDATE_MEAL,
-    mid: id,
-    mealData: {
-      menu,
-      title,
-      imageUrl,
-      description,
-      allergens,
-    },
+  return async (dispatch) => {
+    await fetch(
+      `https://lowells-menu-training-default-rtdb.firebaseio.com/meals/${id}.json`,
+      {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          menu,
+          title,
+          imageUrl,
+          description,
+          allergens,
+        }),
+      }
+    );
+
+    dispatch({
+      type: UPDATE_MEAL,
+      mid: id,
+      mealData: {
+        menu,
+        title,
+        imageUrl,
+        description,
+        allergens,
+      },
+    });
   };
 };
