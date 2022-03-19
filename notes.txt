@@ -1,0 +1,5 @@
+ProductsOverviewScreen === MealsOverviewScreen
+ShopNavigator === TrainingAppNavigator
+
+breakfast taco image url
+https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Breakfast_tacos.jpg/220px-Breakfast_tacos.jpg

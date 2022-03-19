@@ -98,6 +98,14 @@ const MealsOverviewScreen = (props) => {
   }, [dispatch, setIsLoading, setError, mealsActions]);
 
   useEffect(() => {
+    const willFocusSub = props.navigation.addListener('willFocus', loadMeals);
+
+    return () => {
+      willFocusSub.remove();
+    };
+  }, [loadMeals]);
+
+  useEffect(() => {
     loadMeals();
   }, [loadMeals]);
 
