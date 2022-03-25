@@ -48,12 +48,17 @@ export const fetchMeals = () => {
 
 export const deleteMeal = (mealId) => {
   return async (dispatch) => {
-    await fetch(
+    const response = await fetch(
       `https://lowells-menu-training-default-rtdb.firebaseio.com/meals/${mealId}.json`,
       {
         method: 'DELETE',
       }
     );
+
+    if (!response.ok) {
+      throw new Error('Something went wrong with the delete!');
+    }
+
     dispatch({
       type: DELETE_MEAL,
       mid: mealId,
@@ -80,6 +85,10 @@ export const createMeal = (menu, title, imageUrl, description, allergens) => {
       }
     );
 
+    if (!response.ok) {
+      throw new Error('Something went wrong with the creation!');
+    }
+
     const resData = await response.json();
 
     dispatch({
@@ -105,7 +114,7 @@ export const updateMeal = (
   allergens
 ) => {
   return async (dispatch) => {
-    await fetch(
+    const response = await fetch(
       `https://lowells-menu-training-default-rtdb.firebaseio.com/meals/${id}.json`,
       {
         method: 'PATCH',
@@ -121,6 +130,10 @@ export const updateMeal = (
         }),
       }
     );
+
+    if (!response.ok) {
+      throw new Error('Something went wrong with the update!');
+    }
 
     dispatch({
       type: UPDATE_MEAL,

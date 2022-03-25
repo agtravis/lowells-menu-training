@@ -1,5 +1,6 @@
-import React, { useEffect, useCallback, useReducer } from 'react';
+import React, { useState, useEffect, useCallback, useReducer } from 'react';
 import {
+  ActivityIndicator,
   StyleSheet,
   View,
   Text,
@@ -16,6 +17,7 @@ import HeaderButton from '../../components/UI/HeaderButton';
 import Input from '../../components/UI/Input';
 import * as mealsActions from '../../store/actions/meals';
 import Allergens from '../../constants/Allergens';
+import Colors from '../../constants/Colors';
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 const SUBMIT_ATTEMPTED = 'SUBMIT_ATTEMPTED';
@@ -51,6 +53,8 @@ const formReducer = (state, action) => {
 };
 
 const EditMealScreen = (props) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
   const mealId = props.navigation.getParam('mealId');
   const editedMeal = useSelector((state) =>
     state.meals.meals.find((meal) => meal.id === mealId)
@@ -76,6 +80,12 @@ const EditMealScreen = (props) => {
     formIsValid: editedMeal ? true : false,
     submitAttempted: false,
   });
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert('An error occurred', error, [{ text: 'Okay' }]);
+    }
+  }, [error]);
 
   const toggleMenuHandler = (menuChoice) => {
     dispatchFormState({
@@ -121,7 +131,7 @@ const EditMealScreen = (props) => {
     [dispatchFormState]
   );
 
-  const submitHandler = useCallback(() => {
+  const submitHandler = useCallback(async () => {
     if (!formState.formIsValid) {
       Alert.alert('Wrong input(s)!', 'Please check the errors in the form', [
         {
@@ -135,34 +145,49 @@ const EditMealScreen = (props) => {
       }
       return;
     }
-    if (editedMeal) {
-      dispatch(
-        mealsActions.updateMeal(
-          mealId,
-          formState.inputValues.menu,
-          formState.inputValues.title,
-          formState.inputValues.imageUrl,
-          formState.inputValues.description,
-          formState.inputValues.allergens
-        )
-      );
-    } else {
-      dispatch(
-        mealsActions.createMeal(
-          formState.inputValues.menu,
-          formState.inputValues.title,
-          formState.inputValues.imageUrl,
-          formState.inputValues.description,
-          formState.inputValues.allergens
-        )
-      );
+    setError(null);
+    setIsLoading(true);
+    try {
+      if (editedMeal) {
+        await dispatch(
+          mealsActions.updateMeal(
+            mealId,
+            formState.inputValues.menu,
+            formState.inputValues.title,
+            formState.inputValues.imageUrl,
+            formState.inputValues.description,
+            formState.inputValues.allergens
+          )
+        );
+      } else {
+        await dispatch(
+          mealsActions.createMeal(
+            formState.inputValues.menu,
+            formState.inputValues.title,
+            formState.inputValues.imageUrl,
+            formState.inputValues.description,
+            formState.inputValues.allergens
+          )
+        );
+      }
+      props.navigation.goBack();
+    } catch (err) {
+      setError(err.message);
     }
-    props.navigation.goBack();
+    setIsLoading(false);
   }, [dispatch, dispatchFormState, mealId, formState]);
 
   useEffect(() => {
     props.navigation.setParams({ submit: submitHandler });
   }, [submitHandler]);
+
+  if (isLoading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
+  }
 
   return (
     <KeyboardAvoidingView style={{ flex: 1 }}>
@@ -288,6 +313,11 @@ EditMealScreen.navigationOptions = (navData) => {
 };
 
 const styles = StyleSheet.create({
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   errorContainer: {
     marginVertical: 5,
   },
