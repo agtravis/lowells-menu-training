@@ -22,6 +22,7 @@ import Allergens from '../../constants/Allergens';
 
 const MealsOverviewScreen = (props) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [menu, setMenu] = useState('breakfast');
   const [error, setError] = useState('');
@@ -88,13 +89,13 @@ const MealsOverviewScreen = (props) => {
 
   const loadMeals = useCallback(async () => {
     setError('');
-    setIsLoading(true);
+    setIsRefreshing(true);
     try {
       await dispatch(mealsActions.fetchMeals());
     } catch (err) {
       setError(err.message);
     }
-    setIsLoading(false);
+    setIsRefreshing(false);
   }, [dispatch, setIsLoading, setError, mealsActions]);
 
   useEffect(() => {
@@ -106,7 +107,10 @@ const MealsOverviewScreen = (props) => {
   }, [loadMeals]);
 
   useEffect(() => {
-    loadMeals();
+    setIsLoading(true);
+    loadMeals().then(() => {
+      setIsLoading(false);
+    });
   }, [loadMeals]);
 
   const filterChangeHandler = (name) => {
@@ -203,6 +207,8 @@ const MealsOverviewScreen = (props) => {
       )}
       {!isLoading && meals.length >= 1 && (
         <FlatList
+          onRefresh={loadMeals}
+          refreshing={isRefreshing}
           contentContainerStyle={styles.flatList}
           data={meals}
           keyExtractor={(item) => item.id}
