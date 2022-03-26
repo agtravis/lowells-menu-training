@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation-stack';
 import { Platform } from 'react-native';
-import { createAppContainer } from 'react-navigation';
+import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createDrawerNavigator, DrawerItems } from 'react-navigation-drawer';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -10,6 +10,7 @@ import FavoriteMealsScreen from '../screens/meals/FavoriteMealsScreen';
 import MealDetailScreen from '../screens/meals/MealDetailScreen';
 import AdminMealsScreen from '../screens/user/AdminMealsScreen';
 import EditMealScreen from '../screens/user/EditMealScreen';
+import AuthScreen from '../screens/user/AuthScreen';
 import Colors from '../constants/Colors';
 
 const defaultNavOptions = {
@@ -94,4 +95,18 @@ const TrainingAppNavigator = createDrawerNavigator(
   }
 );
 
-export default createAppContainer(TrainingAppNavigator);
+const AuthNavigator = createStackNavigator(
+  {
+    Auth: AuthScreen,
+  },
+  {
+    defaultNavigationOptions: defaultNavOptions,
+  }
+);
+
+const MainNavigator = createSwitchNavigator({
+  Auth: AuthNavigator,
+  TrainingApp: TrainingAppNavigator,
+});
+
+export default createAppContainer(MainNavigator);
