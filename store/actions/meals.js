@@ -47,9 +47,10 @@ export const fetchMeals = () => {
 };
 
 export const deleteMeal = (mealId) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const token = getState().auth.token;
     const response = await fetch(
-      `https://lowells-menu-training-default-rtdb.firebaseio.com/meals/${mealId}.json`,
+      `https://lowells-menu-training-default-rtdb.firebaseio.com/meals/${mealId}.json?auth=${token}`,
       {
         method: 'DELETE',
       }
@@ -67,9 +68,10 @@ export const deleteMeal = (mealId) => {
 };
 
 export const createMeal = (menu, title, imageUrl, description, allergens) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const token = getState().auth.token;
     const response = await fetch(
-      'https://lowells-menu-training-default-rtdb.firebaseio.com/meals.json',
+      `https://lowells-menu-training-default-rtdb.firebaseio.com/meals.json?auth=${token}`,
       {
         method: 'POST',
         headers: {
@@ -113,9 +115,10 @@ export const updateMeal = (
   description,
   allergens
 ) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const token = getState().auth.token;
     const response = await fetch(
-      `https://lowells-menu-training-default-rtdb.firebaseio.com/meals/${id}.json`,
+      `https://lowells-menu-training-default-rtdb.firebaseio.com/meals/${id}.json?auth=${token}`,
       {
         method: 'PATCH',
         headers: {

@@ -7,11 +7,13 @@ import ReduxThunk from 'redux-thunk';
 
 import mealsReducer from './store/reducers/meals';
 import favoritesReducer from './store/reducers/favorites';
+import authReducer from './store/reducers/auth';
 import TrainingAppNavigator from './navigation/TrainingAppNavigator';
 
 const rootReducer = combineReducers({
   meals: mealsReducer,
   favorites: favoritesReducer,
+  auth: authReducer,
 });
 
 const fetchFonts = () => {
