@@ -30,6 +30,31 @@ export const signup = (email, password) => {
 
     const resData = await response.json();
 
+    const token = resData.idToken;
+    const userId = resData.localId;
+
+    const responseNewUser = await fetch(
+      `https://lowells-menu-training-default-rtdb.firebaseio.com/users/${userId}.json?auth=${token}`,
+      {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+          fullName: '',
+          jobTitle: '',
+          isAdmin: false,
+          quizScores: [],
+          favorites: [],
+        }),
+      }
+    );
+
+    if (!responseNewUser.ok) {
+      throw new Error('Something went wrong with the creation!');
+    }
+
     dispatch({
       type: SIGNUP,
       token: resData.idToken,
