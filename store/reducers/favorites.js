@@ -1,4 +1,4 @@
-import { ADD_TO_FAVORITES } from '../actions/favorites';
+import { ADD_TO_FAVORITES, FETCH_FAVORITES } from '../actions/favorites';
 import { DELETE_MEAL } from '../actions/meals';
 
 const initialState = {
@@ -9,6 +9,12 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case FETCH_FAVORITES:
+      const newFavorites = [...action.favorites];
+      return {
+        ...state,
+        favorites: newFavorites,
+      };
     case ADD_TO_FAVORITES:
       const addedMeal = action.meal;
       if (state.favorites.includes(addedMeal)) {

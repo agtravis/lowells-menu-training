@@ -45,8 +45,8 @@ export const signup = (email, password) => {
           fullName: '',
           jobTitle: '',
           isAdmin: false,
-          quizScores: [],
-          favorites: [],
+          // quizScores: [],
+          // favorites: [],
         }),
       }
     );
