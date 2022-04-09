@@ -1,9 +1,10 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation-stack';
-import { Platform } from 'react-native';
+import { Platform, SafeAreaView, Button, View } from 'react-native';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createDrawerNavigator, DrawerItems } from 'react-navigation-drawer';
 import { Ionicons } from '@expo/vector-icons';
+import { useDispatch } from 'react-redux';
 
 import MealsOverviewScreen from '../screens/meals/MealsOverviewScreen';
 import FavoriteMealsScreen from '../screens/meals/FavoriteMealsScreen';
@@ -12,6 +13,7 @@ import AdminMealsScreen from '../screens/user/AdminMealsScreen';
 import EditMealScreen from '../screens/user/EditMealScreen';
 import AuthScreen from '../screens/user/AuthScreen';
 import StartupScreen from '../screens/StartupScreen';
+import * as authActions from '../store/actions/auth';
 import Colors from '../constants/Colors';
 
 const defaultNavOptions = {
@@ -92,6 +94,24 @@ const TrainingAppNavigator = createDrawerNavigator(
       itemsContainerStyle: {
         marginTop: Platform.OS === 'android' ? 40 : 0,
       },
+    },
+    contentComponent: (props) => {
+      const dispatch = useDispatch();
+      return (
+        <View style={{ flex: 1, paddingTop: 20 }}>
+          <SafeAreaView forceInset={{ top: 'always', horizontal: 'never' }}>
+            <DrawerItems {...props} />
+            <Button
+              title="Logout"
+              color={Colors.primary}
+              onPress={() => {
+                dispatch(authActions.logout());
+                props.navigation.navigate('Auth');
+              }}
+            />
+          </SafeAreaView>
+        </View>
+      );
     },
   }
 );
