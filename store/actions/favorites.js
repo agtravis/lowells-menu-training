@@ -17,12 +17,9 @@ export const fetchFavorites = () => {
 
     const resData = await response.json();
 
-    // console.log(resData.favorites);
-
     if (resData === null || resData.length < 1) {
       dispatch({ type: FETCH_FAVORITES, favorites: [] });
     } else {
-      console.log('exists');
       dispatch({ type: FETCH_FAVORITES, favorites: resData.favorites });
     }
   };

@@ -11,6 +11,7 @@ import MealDetailScreen from '../screens/meals/MealDetailScreen';
 import AdminMealsScreen from '../screens/user/AdminMealsScreen';
 import EditMealScreen from '../screens/user/EditMealScreen';
 import AuthScreen from '../screens/user/AuthScreen';
+import StartupScreen from '../screens/StartupScreen';
 import Colors from '../constants/Colors';
 
 const defaultNavOptions = {
@@ -105,6 +106,7 @@ const AuthNavigator = createStackNavigator(
 );
 
 const MainNavigator = createSwitchNavigator({
+  Startup: StartupScreen,
   Auth: AuthNavigator,
   TrainingApp: TrainingAppNavigator,
 });

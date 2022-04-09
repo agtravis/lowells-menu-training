@@ -22,7 +22,6 @@ import Allergens from '../../constants/Allergens';
 
 const MealsOverviewScreen = (props) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoadedFavorites, setIsLoadedFavorites] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [menu, setMenu] = useState('breakfast');
@@ -107,37 +106,12 @@ const MealsOverviewScreen = (props) => {
     };
   }, [loadMeals]);
 
-  const loadFavorites = useCallback(async () => {
-    try {
-      await dispatch(favoritesActions.fetchFavorites());
-    } catch (err) {
-      console.log(err);
-    }
-  }, [dispatch, favoritesActions]);
-
-  useEffect(() => {
-    const willFocusSub2 = props.navigation.addListener(
-      'willFocus',
-      loadFavorites
-    );
-
-    return () => {
-      willFocusSub2.remove();
-    };
-  }, [loadFavorites]);
-
   useEffect(() => {
     setIsLoading(true);
     loadMeals().then(() => {
       setIsLoading(false);
     });
   }, [loadMeals]);
-
-  useEffect(() => {
-    loadFavorites().then(() => {
-      setIsLoadedFavorites(true);
-    });
-  }, [loadFavorites]);
 
   const filterChangeHandler = (name) => {
     setFilters((prevState) => ({
@@ -255,11 +229,9 @@ const MealsOverviewScreen = (props) => {
               />
               <Button
                 title={
-                  isLoadedFavorites
-                    ? favorites.indexOf(itemData.item) !== -1
-                      ? 'Remove from Favorites'
-                      : 'Add to Favorites' //'Add to Favorites' itemData.item.id
-                    : 'Loading'
+                  favorites.includes(itemData.item)
+                    ? 'Remove from Favorites'
+                    : 'Add to Favorites'
                 }
                 onPress={() => {
                   dispatch(favoritesActions.addToFavorites(itemData.item));

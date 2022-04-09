@@ -7,3 +7,5 @@ https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Breakfast_tacos.jpg/22
 https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=[API_KEY]
 
 https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Emoji_u1f4a9.svg/1200px-Emoji_u1f4a9.svg.png
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
