@@ -106,7 +106,7 @@ const TrainingAppNavigator = createDrawerNavigator(
               color={Colors.primary}
               onPress={() => {
                 dispatch(authActions.logout());
-                props.navigation.navigate('Auth');
+                // props.navigation.navigate('Auth');
               }}
             />
           </SafeAreaView>

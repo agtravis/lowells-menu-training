@@ -4,11 +4,13 @@ import { Provider } from 'react-redux';
 import AppLoading from 'expo-app-loading';
 import * as Font from 'expo-font';
 import ReduxThunk from 'redux-thunk';
+import { LogBox } from 'react-native';
+LogBox.ignoreLogs(['Setting a timer']);
 
 import mealsReducer from './store/reducers/meals';
 import favoritesReducer from './store/reducers/favorites';
 import authReducer from './store/reducers/auth';
-import TrainingAppNavigator from './navigation/TrainingAppNavigator';
+import NavigationContainer from './navigation/NavigationContainer';
 
 const rootReducer = combineReducers({
   meals: mealsReducer,
@@ -43,7 +45,7 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <TrainingAppNavigator />
+      <NavigationContainer />
     </Provider>
   );
 }
