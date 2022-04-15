@@ -8,12 +8,20 @@ import { Ionicons } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux';
 
 import MealsOverviewScreen, {
-  screenOptions,
+  screenOptions as mealsOverviewScreenOptions,
 } from '../screens/meals/MealsOverviewScreen';
-import FavoriteMealsScreen from '../screens/meals/FavoriteMealsScreen';
-import MealDetailScreen from '../screens/meals/MealDetailScreen';
-import AdminMealsScreen from '../screens/user/AdminMealsScreen';
-import EditMealScreen from '../screens/user/EditMealScreen';
+import FavoriteMealsScreen, {
+  screenOptions as favoriteMealsScreenOptions,
+} from '../screens/meals/FavoriteMealsScreen';
+import MealDetailScreen, {
+  screenOptions as mealDetailScreenOptions,
+} from '../screens/meals/MealDetailScreen';
+import AdminMealsScreen, {
+  screenOptions as adminMealsScreenOptions,
+} from '../screens/user/AdminMealsScreen';
+import EditMealScreen, {
+  screenOptions as editMealScreenOptions,
+} from '../screens/user/EditMealScreen';
 import AuthScreen from '../screens/user/AuthScreen';
 import StartupScreen from '../screens/StartupScreen';
 import * as authActions from '../store/actions/auth';
@@ -40,11 +48,12 @@ export const MealsNavigator = () => {
       <MealsStackNavigator.Screen
         name="MealsOverview"
         component={MealsOverviewScreen}
-        options={screenOptions}
+        options={mealsOverviewScreenOptions}
       />
       <MealsStackNavigator.Screen
         name="MealDetail"
         component={MealDetailScreen}
+        options={mealDetailScreenOptions}
       />
     </MealsStackNavigator.Navigator>
   );
@@ -69,6 +78,25 @@ export const MealsNavigator = () => {
 //   }
 // );
 
+const FavoritesStackNavigator = createStackNavigator();
+
+export const FavoritesNavigator = () => {
+  return (
+    <FavoritesStackNavigator.Navigator screenOptions={defaultNavOptions}>
+      <FavoritesStackNavigator.Screen
+        name="FavoriteMeals"
+        component={FavoriteMealsScreen}
+        options={favoriteMealsScreenOptions}
+      />
+      <FavoritesStackNavigator.Screen
+        name="MealDetail"
+        component={MealDetailScreen}
+        options={mealDetailScreenOptions}
+      />
+    </FavoritesStackNavigator.Navigator>
+  );
+};
+
 // const FavoritesNavigator = createStackNavigator(
 //   {
 //     FavoriteMeals: FavoriteMealsScreen,
@@ -83,6 +111,25 @@ export const MealsNavigator = () => {
 //     defaultNavigationOptions: defaultNavOptions,
 //   }
 // );
+
+const AdminStackNavigator = createStackNavigator();
+
+export const AdminNavigator = () => {
+  return (
+    <AdminStackNavigator.Navigator screenOptions={defaultNavOptions}>
+      <AdminStackNavigator.Screen
+        name="AdminMeals"
+        component={AdminMealsScreen}
+        options={adminMealsScreenOptions}
+      />
+      <AdminStackNavigator.Screen
+        name="EditMeal"
+        component={EditMealScreen}
+        options={editMealScreenOptions}
+      />
+    </AdminStackNavigator.Navigator>
+  );
+};
 
 // const AdminNavigator = createStackNavigator(
 //   {

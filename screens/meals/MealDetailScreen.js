@@ -55,12 +55,12 @@ const MealDetailScreen = (props) => {
   );
 };
 
-MealDetailScreen.navigationOptions = (navData) => {
+export const screenOptions = (navData) => {
   return {
     headerTitle: navData.navigation.getParam('mealTitle'),
     headerRight: () => {
-      const isFavorite = navData.navigation.getParam('isFavorite');
-      const toggleFn = navData.navigation.getParam('toggleFav');
+      // const isFavorite = navData.navigation.getParam('isFavorite');
+      // const toggleFn = navData.navigation.getParam('toggleFav');
       return (
         <HeaderButtons HeaderButtonComponent={HeaderButton}>
           <Item

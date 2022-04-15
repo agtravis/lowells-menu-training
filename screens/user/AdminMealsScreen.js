@@ -61,7 +61,7 @@ const AdminMealsScreen = (props) => {
   );
 };
 
-AdminMealsScreen.navigationOptions = (navData) => {
+export const screenOptions = (navData) => {
   return {
     headerTitle: 'Add/Remove Meals',
     headerLeft: () => (

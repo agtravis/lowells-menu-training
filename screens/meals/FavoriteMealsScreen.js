@@ -58,7 +58,7 @@ const FavoriteMealsScreen = (props) => {
   );
 };
 
-FavoriteMealsScreen.navigationOptions = (navData) => {
+export const screenOptions = (navData) => {
   return {
     headerTitle: 'Your Favorite Meals',
     headerLeft: () => (
