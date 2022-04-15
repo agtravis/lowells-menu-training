@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
   },
 });
 
-MealsOverviewScreen.navigationOptions = (navData) => {
+export const screenOptions = (navData) => {
   return {
     headerTitle: "Lowell's Menus",
     headerLeft: () => (
@@ -284,7 +284,7 @@ MealsOverviewScreen.navigationOptions = (navData) => {
       </HeaderButtons>
     ),
     headerRight: () => {
-      const toggleFn = navData.navigation.getParam('hdrBtnRFn');
+      // const toggleFn = navData.navigation.getParam('hdrBtnRFn');
       return (
         <HeaderButtons HeaderButtonComponent={HeaderButton}>
           <Item
