@@ -10,7 +10,7 @@ LogBox.ignoreLogs(['Setting a timer']);
 import mealsReducer from './store/reducers/meals';
 import favoritesReducer from './store/reducers/favorites';
 import authReducer from './store/reducers/auth';
-import NavigationContainer from './navigation/NavigationContainer';
+import AppNavigator from './navigation/AppNavigator';
 
 const rootReducer = combineReducers({
   meals: mealsReducer,
@@ -45,7 +45,7 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <NavigationContainer />
+      <AppNavigator />
     </Provider>
   );
 }
