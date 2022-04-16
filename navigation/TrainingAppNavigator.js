@@ -25,7 +25,9 @@ import AdminMealsScreen, {
 import EditMealScreen, {
   screenOptions as editMealScreenOptions,
 } from '../screens/user/EditMealScreen';
-import AuthScreen from '../screens/user/AuthScreen';
+import AuthScreen, {
+  screenOptions as authScreenOptions,
+} from '../screens/user/AuthScreen';
 import StartupScreen from '../screens/StartupScreen';
 import * as authActions from '../store/actions/auth';
 import Colors from '../constants/Colors';
@@ -45,7 +47,7 @@ const defaultNavOptions = {
 
 const MealsStackNavigator = createStackNavigator();
 
-export const MealsNavigator = () => {
+const MealsNavigator = () => {
   return (
     <MealsStackNavigator.Navigator screenOptions={defaultNavOptions}>
       <MealsStackNavigator.Screen
@@ -83,7 +85,7 @@ export const MealsNavigator = () => {
 
 const FavoritesStackNavigator = createStackNavigator();
 
-export const FavoritesNavigator = () => {
+const FavoritesNavigator = () => {
   return (
     <FavoritesStackNavigator.Navigator screenOptions={defaultNavOptions}>
       <FavoritesStackNavigator.Screen
@@ -117,7 +119,7 @@ export const FavoritesNavigator = () => {
 
 const AdminStackNavigator = createStackNavigator();
 
-export const AdminNavigator = () => {
+const AdminNavigator = () => {
   return (
     <AdminStackNavigator.Navigator screenOptions={defaultNavOptions}>
       <AdminStackNavigator.Screen
@@ -155,7 +157,7 @@ export const AdminNavigator = () => {
 
 const TrainingAppDrawerNavigator = createDrawerNavigator();
 
-const TrainingAppNavigator = () => {
+export const TrainingAppNavigator = () => {
   const dispatch = useDispatch();
   return (
     <TrainingAppDrawerNavigator.Navigator
@@ -175,7 +177,7 @@ const TrainingAppNavigator = () => {
           </View>
         );
       }}
-      drawerContentOptions={{
+      screenOptions={{
         activeTintColor: Colors.primary,
         itemsContainerStyle: {
           marginTop: Platform.OS === 'android' ? 40 : 0,
@@ -250,6 +252,20 @@ const TrainingAppNavigator = () => {
 //     },
 //   }
 // );
+
+const AuthStackNavigator = createStackNavigator();
+
+export const AuthNavigator = () => {
+  return (
+    <AuthStackNavigator.Navigator options={defaultNavOptions}>
+      <AuthStackNavigator.Screen
+        name="Auth"
+        component={AuthScreen}
+        options={authScreenOptions}
+      />
+    </AuthStackNavigator.Navigator>
+  );
+};
 
 // const AuthNavigator = createStackNavigator(
 //   {
