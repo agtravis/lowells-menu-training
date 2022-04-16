@@ -42,7 +42,7 @@ const defaultNavOptions = {
   headerBackTitleStyle: {
     fontFamily: 'ubuntu',
   },
-  headerTintColor: Platform.OS === 'android' ? 'white' : Colors.primary,
+  headerTintColor: Platform.OS === 'android' ? Colors.accent : Colors.primary,
 };
 
 const MealsStackNavigator = createStackNavigator();
@@ -178,6 +178,7 @@ export const TrainingAppNavigator = () => {
         );
       }}
       screenOptions={{
+        headerShown: false,
         activeTintColor: Colors.primary,
         itemsContainerStyle: {
           marginTop: Platform.OS === 'android' ? 40 : 0,

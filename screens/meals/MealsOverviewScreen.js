@@ -99,10 +99,10 @@ const MealsOverviewScreen = (props) => {
   }, [dispatch, setIsLoading, setError, mealsActions]);
 
   useEffect(() => {
-    const willFocusSub = props.navigation.addListener('willFocus', loadMeals);
+    const unsubscribe = props.navigation.addListener('focus', loadMeals);
 
     return () => {
-      willFocusSub.remove();
+      unsubscribe();
     };
   }, [loadMeals]);
 

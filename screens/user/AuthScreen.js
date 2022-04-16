@@ -83,7 +83,7 @@ const AuthScreen = (props) => {
     setIsLoading(true);
     try {
       await dispatch(action);
-      props.navigation.navigate('TrainingApp');
+      // props.navigation.navigate('TrainingApp');
     } catch (err) {
       setError(err.message);
       setIsLoading(false);
@@ -162,6 +162,10 @@ const AuthScreen = (props) => {
 
 export const screenOptions = {
   headerTitle: 'Authenticate',
+  headerStyle: {
+    backgroundColor: Colors.primary,
+  },
+  headerTintColor: Colors.accent,
 };
 
 const styles = StyleSheet.create({
