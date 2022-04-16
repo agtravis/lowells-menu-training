@@ -1,6 +1,9 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import {
+  createDrawerNavigator,
+  DrawerItemList,
+} from '@react-navigation/drawer';
 // import { createStackNavigator } from 'react-navigation-stack';
 import { Platform, SafeAreaView, Button, View } from 'react-native';
 // import { createDrawerNavigator, DrawerItems } from 'react-navigation-drawer';
@@ -149,6 +152,70 @@ export const AdminNavigator = () => {
 //     defaultNavigationOptions: defaultNavOptions,
 //   }
 // );
+
+const TrainingAppDrawerNavigator = createDrawerNavigator();
+
+const TrainingAppNavigator = () => {
+  const dispatch = useDispatch();
+  return (
+    <TrainingAppDrawerNavigator.Navigator
+      drawerContent={(props) => {
+        return (
+          <View style={{ flex: 1, paddingTop: 20 }}>
+            <SafeAreaView forceInset={{ top: 'always', horizontal: 'never' }}>
+              <DrawerItemList {...props} />
+              <Button
+                title="Logout"
+                color={Colors.primary}
+                onPress={() => {
+                  dispatch(authActions.logout());
+                }}
+              />
+            </SafeAreaView>
+          </View>
+        );
+      }}
+      drawerContentOptions={{
+        activeTintColor: Colors.primary,
+        itemsContainerStyle: {
+          marginTop: Platform.OS === 'android' ? 40 : 0,
+        },
+      }}
+    >
+      <TrainingAppDrawerNavigator.Screen
+        name="Meals"
+        component={MealsNavigator}
+        options={{
+          drawerIcon: (props) => (
+            <Ionicons name={'restaurant'} size={23} color={props.color} />
+          ),
+        }}
+      />
+      <TrainingAppDrawerNavigator.Screen
+        name="Favorites"
+        component={FavoritesNavigator}
+        options={{
+          drawerIcon: (props) => (
+            <Ionicons name={'star'} size={23} color={props.color} />
+          ),
+        }}
+      />
+      <TrainingAppDrawerNavigator.Screen
+        name="Admin"
+        component={AdminNavigator}
+        options={{
+          drawerIcon: (props) => (
+            <Ionicons
+              name={Platform.OS === 'android' ? 'md-create' : 'ios-create'}
+              size={23}
+              color={props.color}
+            />
+          ),
+        }}
+      />
+    </TrainingAppDrawerNavigator.Navigator>
+  );
+};
 
 // const TrainingAppNavigator = createDrawerNavigator(
 //   {
