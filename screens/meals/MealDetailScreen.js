@@ -37,7 +37,7 @@ const MealDetailScreen = (props) => {
   useEffect(() => {
     props.navigation.setOptions({
       headerRight: () => {
-        const isFavorite = props.route.params.isFavorite;
+        // const isFavorite = props.route.params.isFavorite;
         return (
           <HeaderButtons HeaderButtonComponent={HeaderButton}>
             <Item
@@ -49,7 +49,7 @@ const MealDetailScreen = (props) => {
         );
       },
     });
-  }, [toggleInFavoritesHandler]);
+  }, [toggleInFavoritesHandler, isFavorite]);
 
   return (
     <ScrollView>
