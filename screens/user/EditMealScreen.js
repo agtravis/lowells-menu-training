@@ -55,7 +55,7 @@ const formReducer = (state, action) => {
 const EditMealScreen = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
-  const mealId = props.navigation.getParam('mealId');
+  const mealId = props.route.params ? props.route.params.mealId : null;
   const editedMeal = useSelector((state) =>
     state.meals.meals.find((meal) => meal.id === mealId)
   );
@@ -295,11 +295,10 @@ const EditMealScreen = (props) => {
 };
 
 export const screenOptions = (navData) => {
-  const submitFn = navData.navigation.getParam('submit');
+  const submitFn = navData.route.params ? navData.route.params.submit : null;
+  const routeParams = navData.route.params ? navData.route.params : {};
   return {
-    headerTitle: navData.navigation.getParam('mealId')
-      ? 'Edit Meal'
-      : 'Add Meal',
+    headerTitle: routeParams.mealId ? 'Edit Meal' : 'Add Meal',
     headerRight: () => (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item
