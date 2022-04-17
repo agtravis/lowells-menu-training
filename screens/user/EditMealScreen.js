@@ -178,7 +178,17 @@ const EditMealScreen = (props) => {
   }, [dispatch, dispatchFormState, mealId, formState]);
 
   useEffect(() => {
-    props.navigation.setParams({ submit: submitHandler });
+    props.navigation.setOptions({
+      headerRight: () => (
+        <HeaderButtons HeaderButtonComponent={HeaderButton}>
+          <Item
+            title="Save"
+            iconName={Platform.OS === 'android' ? 'md-save' : 'ios-save'}
+            onPress={submitHandler}
+          />
+        </HeaderButtons>
+      ),
+    });
   }, [submitHandler]);
 
   if (isLoading) {
@@ -295,19 +305,9 @@ const EditMealScreen = (props) => {
 };
 
 export const screenOptions = (navData) => {
-  const submitFn = navData.route.params ? navData.route.params.submit : null;
   const routeParams = navData.route.params ? navData.route.params : {};
   return {
     headerTitle: routeParams.mealId ? 'Edit Meal' : 'Add Meal',
-    headerRight: () => (
-      <HeaderButtons HeaderButtonComponent={HeaderButton}>
-        <Item
-          title="Save"
-          iconName={Platform.OS === 'android' ? 'md-save' : 'ios-save'}
-          onPress={submitFn}
-        />
-      </HeaderButtons>
-    ),
   };
 };
 

@@ -15,7 +15,7 @@ import * as favoritesActions from '../../store/actions/favorites';
 import HeaderButton from '../../components/UI/HeaderButton';
 
 const MealDetailScreen = (props) => {
-  const mealId = props.navigation.getParam('mealId');
+  const mealId = props.route.params.mealId;
   const selectedMeal = useSelector((state) =>
     state.meals.meals.find((meal) => meal.id === mealId)
   );
@@ -30,13 +30,24 @@ const MealDetailScreen = (props) => {
     dispatch(favoritesActions.addToFavorites(selectedMeal));
   }, [dispatch, selectedMeal]);
 
-  useEffect(() => {
-    props.navigation.setParams({ isFavorite: isFavorite });
-  }, [isFavorite]);
+  // useEffect(() => {
+  //   props.navigation.setParams({ isFavorite: isFavorite });
+  // }, [isFavorite]);
 
   useEffect(() => {
-    props.navigation.setParams({
-      toggleFav: toggleInFavoritesHandler,
+    props.navigation.setOptions({
+      headerRight: () => {
+        const isFavorite = props.route.params.isFavorite;
+        return (
+          <HeaderButtons HeaderButtonComponent={HeaderButton}>
+            <Item
+              title="isFavorite"
+              iconName={isFavorite ? 'star' : 'star-outline'}
+              onPress={toggleInFavoritesHandler}
+            />
+          </HeaderButtons>
+        );
+      },
     });
   }, [toggleInFavoritesHandler]);
 
@@ -57,20 +68,7 @@ const MealDetailScreen = (props) => {
 
 export const screenOptions = (navData) => {
   return {
-    headerTitle: navData.navigation.getParam('mealTitle'),
-    headerRight: () => {
-      // const isFavorite = navData.navigation.getParam('isFavorite');
-      // const toggleFn = navData.navigation.getParam('toggleFav');
-      return (
-        <HeaderButtons HeaderButtonComponent={HeaderButton}>
-          <Item
-            title="isFavorite"
-            iconName={isFavorite ? 'star' : 'star-outline'}
-            onPress={toggleFn}
-          />
-        </HeaderButtons>
-      );
-    },
+    headerTitle: navData.route.params.mealTitle,
   };
 };
 

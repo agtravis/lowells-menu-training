@@ -76,9 +76,24 @@ const MealsOverviewScreen = (props) => {
   }, []);
 
   useEffect(() => {
-    props.navigation.setParams({
-      hdrBtnRFn: headerButtonRightFn,
+    props.navigation.setOptions({
+      headerRight: () => {
+        return (
+          <HeaderButtons HeaderButtonComponent={HeaderButton}>
+            <Item
+              title="Filters"
+              iconName="color-wand"
+              onPress={() => {
+                headerButtonRightFn();
+              }}
+            />
+          </HeaderButtons>
+        );
+      },
     });
+    // props.navigation.setParams({
+    //   hdrBtnRFn: headerButtonRightFn,
+    // });
   }, [headerButtonRightFn]);
 
   const toggleMenuHandler = (menuChoice) => {
@@ -283,20 +298,6 @@ export const screenOptions = (navData) => {
         />
       </HeaderButtons>
     ),
-    headerRight: () => {
-      // const toggleFn = navData.navigation.getParam('hdrBtnRFn');
-      return (
-        <HeaderButtons HeaderButtonComponent={HeaderButton}>
-          <Item
-            title="Filters"
-            iconName="color-wand"
-            onPress={() => {
-              toggleFn();
-            }}
-          />
-        </HeaderButtons>
-      );
-    },
   };
 };
 
