@@ -30,14 +30,9 @@ const MealDetailScreen = (props) => {
     dispatch(favoritesActions.addToFavorites(selectedMeal));
   }, [dispatch, selectedMeal]);
 
-  // useEffect(() => {
-  //   props.navigation.setParams({ isFavorite: isFavorite });
-  // }, [isFavorite]);
-
   useEffect(() => {
     props.navigation.setOptions({
       headerRight: () => {
-        // const isFavorite = props.route.params.isFavorite;
         return (
           <HeaderButtons HeaderButtonComponent={HeaderButton}>
             <Item

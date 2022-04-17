@@ -90,10 +90,18 @@ const MealsOverviewScreen = (props) => {
           </HeaderButtons>
         );
       },
+      headerLeft: () => (
+        <HeaderButtons HeaderButtonComponent={HeaderButton}>
+          <Item
+            title="Menu"
+            iconName={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'}
+            onPress={() => {
+              props.navigation.toggleDrawer();
+            }}
+          />
+        </HeaderButtons>
+      ),
     });
-    // props.navigation.setParams({
-    //   hdrBtnRFn: headerButtonRightFn,
-    // });
   }, [headerButtonRightFn]);
 
   const toggleMenuHandler = (menuChoice) => {
@@ -106,12 +114,13 @@ const MealsOverviewScreen = (props) => {
     setError('');
     setIsRefreshing(true);
     try {
+      await dispatch(favoritesActions.fetchFavorites());
       await dispatch(mealsActions.fetchMeals());
     } catch (err) {
       setError(err.message);
     }
     setIsRefreshing(false);
-  }, [dispatch, setIsLoading, setError, mealsActions]);
+  }, [dispatch, setIsLoading, setError, mealsActions, favoritesActions]);
 
   useEffect(() => {
     const unsubscribe = props.navigation.addListener('focus', loadMeals);
@@ -287,17 +296,6 @@ const styles = StyleSheet.create({
 export const screenOptions = (navData) => {
   return {
     headerTitle: "Lowell's Menus",
-    headerLeft: () => (
-      <HeaderButtons HeaderButtonComponent={HeaderButton}>
-        <Item
-          title="Menu"
-          iconName={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'}
-          onPress={() => {
-            navData.navigation.toggleDrawer();
-          }}
-        />
-      </HeaderButtons>
-    ),
   };
 };
 
