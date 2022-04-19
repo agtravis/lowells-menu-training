@@ -48,9 +48,11 @@ const MealsOverviewScreen = (props) => {
 
   for (const meal of allMeals) {
     let includeMeal = true;
-    for (const allergen of meal.allergens) {
-      if (filters[allergen] === false) {
-        includeMeal = false;
+    if (meal.allergens) {
+      for (const allergen of meal.allergens) {
+        if (filters[allergen] === false) {
+          includeMeal = false;
+        }
       }
     }
     if (includeMeal === true && meal.menu === menu) {
@@ -114,8 +116,9 @@ const MealsOverviewScreen = (props) => {
     setError('');
     setIsRefreshing(true);
     try {
-      await dispatch(favoritesActions.fetchFavorites());
       await dispatch(mealsActions.fetchMeals());
+      await dispatch(favoritesActions.fetchFavorites());
+      // console.log(favorites);
     } catch (err) {
       setError(err.message);
     }
@@ -142,6 +145,15 @@ const MealsOverviewScreen = (props) => {
       ...prevState,
       [name]: !filters[name],
     }));
+  };
+
+  const isInFavorites = (item) => {
+    for (const meal of favorites) {
+      if (meal.id === item.id) {
+        return true;
+      }
+    }
+    return false;
   };
 
   return (
@@ -253,7 +265,7 @@ const MealsOverviewScreen = (props) => {
               />
               <Button
                 title={
-                  favorites.includes(itemData.item)
+                  isInFavorites(itemData.item)
                     ? 'Remove from Favorites'
                     : 'Add to Favorites'
                 }

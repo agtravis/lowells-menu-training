@@ -22,7 +22,15 @@ const MealDetailScreen = (props) => {
 
   const favorites = useSelector((state) => state.favorites.favorites);
 
-  const isFavorite = favorites.includes(selectedMeal);
+  let isInFavorites = false;
+
+  for (const meal of favorites) {
+    if (selectedMeal.id === meal.id) {
+      isInFavorites = true;
+    }
+  }
+
+  // favorites.includes(selectedMeal);
 
   const dispatch = useDispatch();
 
@@ -36,22 +44,22 @@ const MealDetailScreen = (props) => {
         return (
           <HeaderButtons HeaderButtonComponent={HeaderButton}>
             <Item
-              title="isFavorite"
-              iconName={isFavorite ? 'star' : 'star-outline'}
+              title="isInFavorites"
+              iconName={isInFavorites ? 'star' : 'star-outline'}
               onPress={toggleInFavoritesHandler}
             />
           </HeaderButtons>
         );
       },
     });
-  }, [toggleInFavoritesHandler, isFavorite]);
+  }, [toggleInFavoritesHandler, isInFavorites]);
 
   return (
     <ScrollView>
       <Image style={styles.image} source={{ uri: selectedMeal.imageUrl }} />
       <View style={styles.actions}>
         <Button
-          title={isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
+          title={isInFavorites ? 'Remove from Favorites' : 'Add to Favorites'}
           onPress={toggleInFavoritesHandler}
           color={Colors.primary}
         />

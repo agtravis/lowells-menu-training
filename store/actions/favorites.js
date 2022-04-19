@@ -17,6 +17,21 @@ export const fetchFavorites = () => {
 
     const resData = await response.json();
 
+    if (resData.favorites) {
+      const responseAllMeals = await fetch(
+        'https://lowells-menu-training-default-rtdb.firebaseio.com/meals.json'
+      );
+
+      if (!responseAllMeals.ok) {
+        throw new Error(
+          'There was an error connecting to the database, please contact your administrator.'
+        );
+      }
+      const resDataAllMeals = await responseAllMeals.json();
+      // console.log(resDataAllMeals);
+      // CHECK FAVORITES FOR MEALS THAT DON'T EXIST HERE
+    }
+
     if (resData === null || resData.length < 1) {
       dispatch({ type: FETCH_FAVORITES, favorites: [] });
     } else {
@@ -30,16 +45,36 @@ export const addToFavorites = (addedMeal) => {
     const token = getState().auth.token;
     const userId = getState().auth.userId;
 
-    const stateFavorites = getState().favorites.favorites;
-    let newFavorites = [];
+    const responseFavorites = await fetch(
+      `https://lowells-menu-training-default-rtdb.firebaseio.com/users/${userId}.json`
+    );
 
-    if (stateFavorites.includes(addedMeal)) {
-      const reducedFavorites = stateFavorites.filter(
-        (meal) => meal.id !== addedMeal.id
+    if (!responseFavorites.ok) {
+      throw new Error(
+        'There was an error connecting to the database, please contact your administrator.'
       );
-      newFavorites = reducedFavorites;
-    } else {
-      newFavorites = [...stateFavorites, addedMeal];
+    }
+
+    const resDataFavorites = await responseFavorites.json();
+
+    let newFavorites = [addedMeal];
+
+    if (resDataFavorites.favorites) {
+      const { favorites } = resDataFavorites;
+
+      let isInFavorites = false;
+
+      for (const meal of favorites) {
+        if (addedMeal.id === meal.id) {
+          isInFavorites = true;
+        }
+      }
+
+      if (isInFavorites) {
+        newFavorites = favorites.filter((meal) => meal.id !== addedMeal.id);
+      } else {
+        newFavorites = [...favorites, addedMeal];
+      }
     }
 
     const response = await fetch(
@@ -58,11 +93,11 @@ export const addToFavorites = (addedMeal) => {
     if (!response.ok) {
       console.log(response);
       throw new Error('Something went wrong with the creation!');
+    } else {
+      dispatch({
+        type: ADD_TO_FAVORITES,
+        meal: addedMeal,
+      });
     }
-
-    dispatch({
-      type: ADD_TO_FAVORITES,
-      meal: addedMeal,
-    });
   };
 };

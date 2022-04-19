@@ -2,8 +2,6 @@ import { ADD_TO_FAVORITES, FETCH_FAVORITES } from '../actions/favorites';
 import { DELETE_MEAL } from '../actions/meals';
 
 const initialState = {
-  // once user in place, watch video 205
-  //get favorite meals from database, user favorites
   favorites: [],
 };
 
@@ -17,7 +15,15 @@ export default (state = initialState, action) => {
       };
     case ADD_TO_FAVORITES:
       const addedMeal = action.meal;
-      if (state.favorites.includes(addedMeal)) {
+
+      let isInFavorites = false;
+      for (const meal of state.favorites) {
+        if (addedMeal.id === meal.id) {
+          isInFavorites = true;
+        }
+      }
+
+      if (isInFavorites) {
         const reducedFavorites = state.favorites.filter(
           (meal) => meal.id !== addedMeal.id
         );

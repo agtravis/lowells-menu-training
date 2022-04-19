@@ -58,12 +58,12 @@ export const deleteMeal = (mealId) => {
 
     if (!response.ok) {
       throw new Error('Something went wrong with the delete!');
+    } else {
+      dispatch({
+        type: DELETE_MEAL,
+        mid: mealId,
+      });
     }
-
-    dispatch({
-      type: DELETE_MEAL,
-      mid: mealId,
-    });
   };
 };
 
