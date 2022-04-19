@@ -8,6 +8,5 @@ https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=[API_KEY]
 
 https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Emoji_u1f4a9.svg/1200px-Emoji_u1f4a9.svg.png
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-Warning: Encountered two children with the same key, `-MyT210PqUj-NFKBSkJI`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+Delete meal from admin > go to all meals > go to favorites, meal is there
+should fetchFavorites from favorites screen as well as all meals

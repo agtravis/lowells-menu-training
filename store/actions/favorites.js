@@ -4,6 +4,7 @@ export const FETCH_FAVORITES = 'FETCH_FAVORITES';
 export const fetchFavorites = () => {
   return async (dispatch, getState) => {
     const userId = getState().auth.userId;
+    const token = getState().auth.token;
 
     const response = await fetch(
       `https://lowells-menu-training-default-rtdb.firebaseio.com/users/${userId}.json`
@@ -27,9 +28,18 @@ export const fetchFavorites = () => {
           'There was an error connecting to the database, please contact your administrator.'
         );
       }
-      const resDataAllMeals = await responseAllMeals.json();
-      // console.log(resDataAllMeals);
-      // CHECK FAVORITES FOR MEALS THAT DON'T EXIST HERE
+      const allMealsObject = await responseAllMeals.json();
+      const favoritesArray = resData.favorites;
+      for (let i = 0; i < favoritesArray.length; ++i) {
+        if (!allMealsObject[favoritesArray[i].id]) {
+          const responseDelete = await fetch(
+            `https://lowells-menu-training-default-rtdb.firebaseio.com/users/${userId}/favorites/${i}.json?auth=${token}`,
+            {
+              method: 'DELETE',
+            }
+          );
+        }
+      }
     }
 
     if (resData === null || resData.length < 1) {
