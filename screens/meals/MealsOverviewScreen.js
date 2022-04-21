@@ -118,7 +118,6 @@ const MealsOverviewScreen = (props) => {
     try {
       await dispatch(mealsActions.fetchMeals());
       await dispatch(favoritesActions.fetchFavorites());
-      // console.log(favorites);
     } catch (err) {
       setError(err.message);
     }

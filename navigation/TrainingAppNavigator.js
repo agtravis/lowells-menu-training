@@ -4,9 +4,7 @@ import {
   createDrawerNavigator,
   DrawerItemList,
 } from '@react-navigation/drawer';
-// import { createStackNavigator } from 'react-navigation-stack';
 import { Platform, SafeAreaView, Button, View } from 'react-native';
-// import { createDrawerNavigator, DrawerItems } from 'react-navigation-drawer';
 import { Ionicons } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux';
 
@@ -64,25 +62,6 @@ const MealsNavigator = () => {
   );
 };
 
-// const MealsNavigator = createStackNavigator(
-//   {
-//     MealsOverview: MealsOverviewScreen,
-//     MealDetail: MealDetailScreen,
-//   },
-//   {
-//     navigationOptions: {
-//       drawerIcon: (drawerConfig) => (
-//         <Ionicons
-//           name={'restaurant'}
-//           size={23}
-//           color={drawerConfig.tintColor}
-//         />
-//       ),
-//     },
-//     defaultNavigationOptions: defaultNavOptions,
-//   }
-// );
-
 const FavoritesStackNavigator = createStackNavigator();
 
 const FavoritesNavigator = () => {
@@ -102,21 +81,6 @@ const FavoritesNavigator = () => {
   );
 };
 
-// const FavoritesNavigator = createStackNavigator(
-//   {
-//     FavoriteMeals: FavoriteMealsScreen,
-//     MealDetail: MealDetailScreen,
-//   },
-//   {
-//     navigationOptions: {
-//       drawerIcon: (drawerConfig) => (
-//         <Ionicons name={'star'} size={23} color={drawerConfig.tintColor} />
-//       ),
-//     },
-//     defaultNavigationOptions: defaultNavOptions,
-//   }
-// );
-
 const AdminStackNavigator = createStackNavigator();
 
 const AdminNavigator = () => {
@@ -135,25 +99,6 @@ const AdminNavigator = () => {
     </AdminStackNavigator.Navigator>
   );
 };
-
-// const AdminNavigator = createStackNavigator(
-//   {
-//     AdminMeals: AdminMealsScreen,
-//     EditMeal: EditMealScreen,
-//   },
-//   {
-//     navigationOptions: {
-//       drawerIcon: (drawerConfig) => (
-//         <Ionicons
-//           name={Platform.OS === 'android' ? 'md-create' : 'ios-create'}
-//           size={23}
-//           color={drawerConfig.tintColor}
-//         />
-//       ),
-//     },
-//     defaultNavigationOptions: defaultNavOptions,
-//   }
-// );
 
 const TrainingAppDrawerNavigator = createDrawerNavigator();
 
@@ -220,40 +165,6 @@ export const TrainingAppNavigator = () => {
   );
 };
 
-// const TrainingAppNavigator = createDrawerNavigator(
-//   {
-//     Meals: MealsNavigator,
-//     Favorites: FavoritesNavigator,
-//     Admin: AdminNavigator,
-//   },
-//   {
-//     contentOptions: {
-//       activeTintColor: Colors.primary,
-//       itemsContainerStyle: {
-//         marginTop: Platform.OS === 'android' ? 40 : 0,
-//       },
-//     },
-//     contentComponent: (props) => {
-//       const dispatch = useDispatch();
-//       return (
-//         <View style={{ flex: 1, paddingTop: 20 }}>
-//           <SafeAreaView forceInset={{ top: 'always', horizontal: 'never' }}>
-//             <DrawerItems {...props} />
-//             <Button
-//               title="Logout"
-//               color={Colors.primary}
-//               onPress={() => {
-//                 dispatch(authActions.logout());
-//                 // props.navigation.navigate('Auth');
-//               }}
-//             />
-//           </SafeAreaView>
-//         </View>
-//       );
-//     },
-//   }
-// );
-
 const AuthStackNavigator = createStackNavigator();
 
 export const AuthNavigator = () => {
@@ -267,20 +178,3 @@ export const AuthNavigator = () => {
     </AuthStackNavigator.Navigator>
   );
 };
-
-// const AuthNavigator = createStackNavigator(
-//   {
-//     Auth: AuthScreen,
-//   },
-//   {
-//     defaultNavigationOptions: defaultNavOptions,
-//   }
-// );
-
-// const MainNavigator = createSwitchNavigator({
-//   Startup: StartupScreen,
-//   Auth: AuthNavigator,
-//   TrainingApp: TrainingAppNavigator,
-// });
-
-// export default createAppContainer(MainNavigator);

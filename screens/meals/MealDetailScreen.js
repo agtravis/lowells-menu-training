@@ -30,8 +30,6 @@ const MealDetailScreen = (props) => {
     }
   }
 
-  // favorites.includes(selectedMeal);
-
   const dispatch = useDispatch();
 
   const toggleInFavoritesHandler = useCallback(() => {
