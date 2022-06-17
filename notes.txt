@@ -10,3 +10,5 @@ https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Emoji_u1f4a9.svg/1200p
 
 Delete meal from admin > go to all meals > go to favorites, meal is there
 should fetchFavorites from favorites screen as well as all meals
+
+password error message more specific

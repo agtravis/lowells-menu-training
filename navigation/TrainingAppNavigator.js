@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createStackNavigator } from '@react-navigation/stack';
 import {
   createDrawerNavigator,
@@ -103,6 +105,26 @@ const AdminNavigator = () => {
 const TrainingAppDrawerNavigator = createDrawerNavigator();
 
 export const TrainingAppNavigator = () => {
+  const [userIsAdmin, setUserIsAdmin] = useState(false);
+
+  const setAdminStatus = async () => {
+    const userData = await AsyncStorage.getItem('userData');
+    if (userData) {
+      const userId = JSON.parse(userData).userId;
+      const response = await fetch(
+        'https://lowells-menu-training-default-rtdb.firebaseio.com/users.json'
+      );
+
+      const resData = await response.json();
+      if (resData[userId].isAdmin) {
+        console.log(true);
+        setUserIsAdmin(true);
+      }
+    }
+  };
+
+  setTimeout(setAdminStatus, 2000);
+
   const dispatch = useDispatch();
   return (
     <TrainingAppDrawerNavigator.Navigator
@@ -148,19 +170,21 @@ export const TrainingAppNavigator = () => {
           ),
         }}
       />
-      <TrainingAppDrawerNavigator.Screen
-        name="Admin"
-        component={AdminNavigator}
-        options={{
-          drawerIcon: (props) => (
-            <Ionicons
-              name={Platform.OS === 'android' ? 'md-create' : 'ios-create'}
-              size={23}
-              color={props.color}
-            />
-          ),
-        }}
-      />
+      {userIsAdmin && (
+        <TrainingAppDrawerNavigator.Screen
+          name="Admin"
+          component={AdminNavigator}
+          options={{
+            drawerIcon: (props) => (
+              <Ionicons
+                name={Platform.OS === 'android' ? 'md-create' : 'ios-create'}
+                size={23}
+                color={props.color}
+              />
+            ),
+          }}
+        />
+      )}
     </TrainingAppDrawerNavigator.Navigator>
   );
 };
